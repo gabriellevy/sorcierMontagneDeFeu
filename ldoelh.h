@@ -21,6 +21,7 @@ public:
     static QString HABILETE;
     static QString ENDURANCE;
     static QString CHANCE;
+    void InitialiserCaracsBase();
 };
 
 #endif // LDOELH_H

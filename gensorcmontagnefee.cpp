@@ -5,6 +5,7 @@
 #include "../destinLib/perso.h"
 #include "../destinLib/execeffet.h"
 #include "../destinLib/lancerde.h"
+#include "../destinLib/setcarac.h"
 
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
 
@@ -14,11 +15,11 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
     //GenererFonctionsCallback();
 
-    GenererCaracs();
-
     GenererEvtsAccueil();
 
     FinGenerationHistoire();
+
+    GenererCaracs();
 
     return m_HistoireGeneree;
 }
@@ -33,8 +34,17 @@ void GenSorcMontagneFeu::GenererPersos()
 
 void GenSorcMontagneFeu::GenererCaracs()
 {
-    //GetUniversSkaven()->GenererTousLesClans();
-    // initilisée via le perso
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE);
+    int habilete = 6 + Aleatoire::GetAl()->D6();
+    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::HABILETE, habilete);
+
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::ENDURANCE);
+    int endurance = 12 + Aleatoire::GetAl()->D6() + Aleatoire::GetAl()->D6();
+    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::ENDURANCE, endurance);
+
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE);
+    int chance = 6 + Aleatoire::GetAl()->D6();
+    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::CHANCE, chance);
 }
 
 ResExecutionLancerDe* ExecutionCombatDe(int resDe, QVector<QString> params)
@@ -63,6 +73,7 @@ void GenSorcMontagneFeu::GenererCombatBidon()
 void GenSorcMontagneFeu::GenererEvtsAccueil()
 {
     this->AjouterEvt("Debut", "Génération du perso par les choix");
+    AjouterEffetNarration("", ":/images/couverture.PNG", "couverture");
 
     GenererCombatBidon();
 }

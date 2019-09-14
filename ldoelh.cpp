@@ -18,3 +18,7 @@ LDOELH::LDOELH(ModeAffichage modeAffichage,
     m_GensHistoire[LDOELH::SORCIER_MONTAGNE_FEU] = new GenSorcMontagneFeu();
 }
 
+void LDOELH::InitialiserCaracsBase()
+{
+
+}
