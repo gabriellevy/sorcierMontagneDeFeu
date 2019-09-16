@@ -20,6 +20,7 @@ protected:
 private:
     // génération de l'événement de base
     void GenererEvtsAccueil();
+    void GenererNumeros();
 
     void GenererCombatBidon();
 
