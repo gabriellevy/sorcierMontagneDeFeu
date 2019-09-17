@@ -18,9 +18,13 @@ protected:
     virtual void GenererPersos();
 
 private:
-    // génération de l'événement de base
+    // génération des événement et effets de base
     void GenererEvtsAccueil();
     void GenererNumeros();
+
+    // fonction gameplay générales (défis fantastiques en général ??) => faire une classe mère GenDefisFantastiques ?
+    void TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
+                       QString texteChanceux, QString effet_chanceux_id);
 
     void GenererCombatBidon();
 
