@@ -113,7 +113,7 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
 void GenSorcMontagneFeu::GenererNumeros()
 {
     //1
-    /*AjouterEffetNarration("Vos deux jours de marche sont enfin terminés. Après avoir ôté votre "
+    AjouterEffetNarration("Vos deux jours de marche sont enfin terminés. Après avoir ôté votre "
                           "épée de son fourreau, vous la déposez sur le sol et vous poussez un "
                           "soupir de soulagement en vous asseyant sur un rocher couvert de "
                           "mousse pour prendre quelques instants de repos. Vous vous étirez, vous "
@@ -141,7 +141,7 @@ void GenSorcMontagneFeu::GenererNumeros()
                           "bifurcation.",
            "", "1");
     AjouterChoixGoToEffet("Irez-vous vers l'ouest", "71");
-    AjouterChoixGoToEffet("ou vers l'est", "278");*/
+    AjouterChoixGoToEffet("ou vers l'est", "278");
 
     //2
     AjouterEffetNarration("Tentez votre Chance. Si vous êtes chanceux, vous parvenez à vous "
@@ -154,7 +154,33 @@ void GenSorcMontagneFeu::GenererNumeros()
                        "16",
                        "Vous avez eu de la chance, vous rampez le long du couloir jusqu'au croisement.", "269"
                        );
+    // 3
+    AjouterEffetNarration("La cloche tinte faiblement, et quelques instants plus tard, vous voyez un vieil homme tout "
+                          "desséché grimper dans une barque amarrée à la rive nord. Il rame lentement dans votre direction, "
+                          "puis s'avance vers vous en clopinant. Il vous demande 3 Pièces d'Or. Vous protestez contre ce "
+                          "tarif trop élevé, et il marmonne une vague excuse en invoquant «l'inflation». Au bout d'un moment, "
+                          "vos protestations le mettent en colère. ",
+                          "", "3");
+    AjouterChoixGoToEffet("Allezvous lui payer les trois Pièces d'Or", "272");
+    AjouterChoixGoToEffet("ou le menacer", "127");
 
+    // 4
+    AjouterEffetNarration("Vous vous trouvez dans un couloir nord-sud. Au nord, le passage s'oriente vers l'est à quelques mètres devant vous.  ",
+                          "", "4");
+    AjouterChoixGoToEffet("Si vous voulez explorer l'endroit", "46");
+    AjouterChoixGoToEffet("Au sud, le couloir tourne également vers l'est. Si vous préférez aller de ce côté", "332");
+
+    // 5
+    AjouterEffetNarration("Sur le mur est du passage, il y a une porte de bois brut. En écoutant à la porte, vous entendez quelqu'un chantonner gaiement.",
+                          "", "5");
+    AjouterChoixGoToEffet("Voulez-vous frapper à la porte et entrer", "97");
+    AjouterChoixGoToEffet(" ou continuerezvous vers le nord", "292");
+
+    // 6
+    Effet* effet6 = AjouterEffetNarration("La haute porte n'a pas de poignée. Vous essayez de l'enfoncer, mais sans résultat. La porte ne bougera pas. 3"
+                          "Vous décidez d'abandonner et vous repassez par l'ouverture du couloir est-ouest à quelque distance en arrière. ",
+                          "", "6");
+    effet6->m_GoToEffetId = "89";
 }
 
 void GenSorcMontagneFeu::GenererEvtsAccueil()
