@@ -20,14 +20,15 @@ protected:
 private:
     // génération des événement et effets de base
     void GenererEvtsAccueil();
-    void GenererNumeros();
+    void GenererNumeros1_10();
     void GenererEffetsGeneriques();
 
     // fonction gameplay générales (défis fantastiques en général ??) => faire une classe mère GenDefisFantastiques ?
     void TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
                        QString texteChanceux, QString effet_chanceux_id);
 
-    void AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre);
+    LancerDe* AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre);
+    void AjouterCombatAvecFuite(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre, QString texteFuite, QString idFuite);
 
 };
 

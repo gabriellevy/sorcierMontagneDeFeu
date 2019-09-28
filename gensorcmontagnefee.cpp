@@ -17,7 +17,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
     //GenererFonctionsCallback();
 
     GenererEvtsAccueil();
-    GenererNumeros();
+    GenererNumeros1_10();
     GenererEffetsGeneriques();
 
     FinGenerationHistoire();
@@ -72,11 +72,19 @@ ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
     return new ResExecutionLancerDe(resTxt, !fini);
 }
 
-void GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceDepartMonstre)
+void GenSorcMontagneFeu::AjouterCombatAvecFuite(
+        Effet* effet, QString nomMonstre, int habileteMonstre,
+        int enduranceDepartMonstre, QString texteFuite, QString idFuite)
+{
+    LancerDe* combat = AjouterCombat(effet, nomMonstre, habileteMonstre, enduranceDepartMonstre);
+    m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
+}
+
+LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceDepartMonstre)
 {
     QString texteCombatBase = nomMonstre + " - HABILITÉ : " + QString::number(habileteMonstre) +
                                          " ENDURANCE : ";
-    effet->m_Texte += "\n\n" + texteCombatBase;
+    effet->m_Texte += "\n\n" + texteCombatBase + QString::number(enduranceDepartMonstre);
 
     std::function<ResExecutionLancerDe*(int)> lancerHabiliteJoueur = [texteCombatBase, nomMonstre, habileteMonstre, enduranceDepartMonstre](int i) {
         QString resTxt = "";
@@ -85,8 +93,10 @@ void GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int hab
         QString phaseEnnemi = "phaseEnnemi";
         bool combatContinue = true;
         int enduranceActuelleMonstre = GestionnaireCarac::GetCaracValueAsInt(LDOELH::ENDURANCE_ENNEMI);
-        if ( enduranceActuelleMonstre <= 0)
+        if ( enduranceActuelleMonstre <= 0) {
             enduranceActuelleMonstre = enduranceDepartMonstre;
+            GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
+        }
 
         std::function<QString()> getIntituleCombat = [texteCombatBase]() {
             return "\n\n" + texteCombatBase + GestionnaireCarac::GetCaracValue(LDOELH::ENDURANCE_ENNEMI);
@@ -152,7 +162,7 @@ void GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int hab
         return new ResExecutionLancerDe(resTxt, combatContinue);
     };
 
-    m_GenerateurEvt->AjouterLancerDe("Combat", 2, lancerHabiliteJoueur);
+    return m_GenerateurEvt->AjouterLancerDe("Combat", 2, lancerHabiliteJoueur);
 }
 
 
@@ -181,7 +191,7 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
 }
 
 
-void GenSorcMontagneFeu::GenererNumeros()
+void GenSorcMontagneFeu::GenererNumeros1_10()
 {
     //1
     AjouterEffetNarration("Vos deux jours de marche sont enfin terminés. Après avoir ôté votre "
@@ -265,9 +275,9 @@ void GenSorcMontagneFeu::GenererNumeros()
                 "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
                 "un homme aux allures de sauvage bondit sur vous en brandissant une hache d'armes. C'est un BARBARE fou, et il vous faut le combattre. ",
                 "", "8");
-    AjouterCombat(effet8, "BARBARE", 7, 6);
-    //        plus la possibilité de se barrer en cours de combat !
-    //AjouterChoixGoToEffet("Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat", "189");
+    AjouterCombatAvecFuite(effet8, "BARBARE", 7, 6,
+                           "Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat",
+                           "189");
     effet8->m_GoToEffetId = "273";
 }
 
