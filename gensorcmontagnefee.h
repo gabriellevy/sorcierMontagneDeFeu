@@ -21,12 +21,13 @@ private:
     // génération des événement et effets de base
     void GenererEvtsAccueil();
     void GenererNumeros();
+    void GenererEffetsGeneriques();
 
     // fonction gameplay générales (défis fantastiques en général ??) => faire une classe mère GenDefisFantastiques ?
     void TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
                        QString texteChanceux, QString effet_chanceux_id);
 
-    void GenererCombatBidon();
+    void AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre);
 
 };
 

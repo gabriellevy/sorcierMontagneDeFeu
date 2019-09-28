@@ -21,6 +21,11 @@ public:
     static QString HABILETE;
     static QString ENDURANCE;
     static QString CHANCE;
+    // caractéristiques "gameplay" nécessaires pour le système mais pas affichées
+    static QString PHASE_COMBAT;
+    static QString RES_ATTAQUE_JOUEUR;
+    static QString RES_ATTAQUE_ENNEMI;
+    static QString ENDURANCE_ENNEMI;
     void InitialiserCaracsBase();
 };
 

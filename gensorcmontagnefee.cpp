@@ -18,6 +18,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
     GenererEvtsAccueil();
     GenererNumeros();
+    GenererEffetsGeneriques();
 
     FinGenerationHistoire();
 
@@ -71,17 +72,87 @@ ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
     return new ResExecutionLancerDe(resTxt, !fini);
 }
 
-void GenSorcMontagneFeu::GenererCombatBidon()
+void GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceDepartMonstre)
 {
-    Effet* effet = AjouterEffetNarration("Vous allez lancer un dé j'imagine.",
-           "", "lancerDe");
+    QString texteCombatBase = nomMonstre + " - HABILITÉ : " + QString::number(habileteMonstre) +
+                                         " ENDURANCE : ";
+    effet->m_Texte += "\n\n" + texteCombatBase;
 
-    LancerDe* lancerDe = new LancerDe(effet, "Combattre", 3, ExecutionCombatDe);
-    effet->m_LancerDe = lancerDe;
+    std::function<ResExecutionLancerDe*(int)> lancerHabiliteJoueur = [texteCombatBase, nomMonstre, habileteMonstre, enduranceDepartMonstre](int i) {
+        QString resTxt = "";
+        QString phaseActuelle = GestionnaireCarac::GetCaracValue(LDOELH::PHASE_COMBAT);
+        QString phaseJoueur = "phaseJoueur";
+        QString phaseEnnemi = "phaseEnnemi";
+        bool combatContinue = true;
+        int enduranceActuelleMonstre = GestionnaireCarac::GetCaracValueAsInt(LDOELH::ENDURANCE_ENNEMI);
+        if ( enduranceActuelleMonstre <= 0)
+            enduranceActuelleMonstre = enduranceDepartMonstre;
 
+        std::function<QString()> getIntituleCombat = [texteCombatBase]() {
+            return "\n\n" + texteCombatBase + GestionnaireCarac::GetCaracValue(LDOELH::ENDURANCE_ENNEMI);
+        };
 
-    AjouterEffetNarration("Le combat est fini j'imagine.",
-           "", "finiCombat");
+        if ( phaseActuelle == "")
+            phaseActuelle = phaseJoueur;
+
+        if ( phaseActuelle == phaseJoueur) {
+            // le joueur attaque (lance les dés)
+            int resTotal = GestionnaireCarac::GetCaracValueAsInt(LDOELH::HABILETE) + i;
+            resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
+            GestionnaireCarac::SetValeurACaracId(LDOELH::RES_ATTAQUE_JOUEUR, resTotal);
+
+            // au tour du monstre :
+            GestionnaireCarac::SetValeurACaracId(LDOELH::PHASE_COMBAT, phaseEnnemi);
+        } else {
+            // le monstre attaque et on résoud le duel
+            int resEnnemi = habileteMonstre + i;
+            resTxt  = nomMonstre + ", force d'attaque  : "  + QString::number(resEnnemi);
+            GestionnaireCarac::SetValeurACaracId(LDOELH::RES_ATTAQUE_ENNEMI, resEnnemi);
+
+            int resJoueur = GestionnaireCarac::GetCaracValueAsInt(LDOELH::RES_ATTAQUE_JOUEUR);
+            // conclusion de la phase de combat :
+            if (resJoueur > resEnnemi) {
+                // le joueur a l'avantage :
+                enduranceActuelleMonstre -= 2;
+                GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
+                if ( enduranceActuelleMonstre <= 0) {
+                    // l'ennemi est mort :
+                    resTxt += "\nL'ennemi est mort. Victoire !";
+                    combatContinue = false;
+                } else {
+                    // l'ennemi est blessé :
+                    resTxt += "\nL'ennemi est blessé.";
+                    resTxt += getIntituleCombat();
+                }
+            }
+            else if (resJoueur < resEnnemi)
+            {
+                // le monstre a l'avantage :
+                int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
+                if ( endurance <= 0) {
+                    // perdu... :
+                    resTxt += "\nVous êtes mort.";
+                    combatContinue = false;
+                    Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
+                } else {
+                    // joueur blessé :
+                    resTxt += "\nVous êtes blessé.";
+                    resTxt += getIntituleCombat();
+                }
+            } else {
+                // égalité
+                resTxt += "\nÉgalité.";
+                resTxt += getIntituleCombat();
+            }
+
+            // au tour du joueur
+            GestionnaireCarac::SetValeurACaracId(LDOELH::PHASE_COMBAT, phaseJoueur);
+            IPerso::GetPersoInterface()->RafraichirAffichage();
+        }
+        return new ResExecutionLancerDe(resTxt, combatContinue);
+    };
+
+    m_GenerateurEvt->AjouterLancerDe("Combat", 2, lancerHabiliteJoueur);
 }
 
 
@@ -161,7 +232,7 @@ void GenSorcMontagneFeu::GenererNumeros()
                           "tarif trop élevé, et il marmonne une vague excuse en invoquant «l'inflation». Au bout d'un moment, "
                           "vos protestations le mettent en colère. ",
                           "", "3");
-    AjouterChoixGoToEffet("Allezvous lui payer les trois Pièces d'Or", "272");
+    AjouterChoixGoToEffet("Allez vous lui payer les trois Pièces d'Or", "272");
     AjouterChoixGoToEffet("ou le menacer", "127");
 
     // 4
@@ -181,6 +252,28 @@ void GenSorcMontagneFeu::GenererNumeros()
                           "Vous décidez d'abandonner et vous repassez par l'ouverture du couloir est-ouest à quelque distance en arrière. ",
                           "", "6");
     effet6->m_GoToEffetId = "89";
+
+    //7
+    Effet* effet7 = AjouterEffetNarration("Vous êtes sur la berge nord d'une rivière au fort courant, dans une grande caverne souterraine. ",
+                          "", "7");
+    effet7->m_GoToEffetId = "214";
+
+    //8
+    Effet* effet8 = AjouterEffetNarration(
+                "Le passage devant vous aboutit à une porte solide. Vous essayez d'écouter, mais vous n'entendez rien. "
+                "Vous tournez alors la poignée, la porte s'ouvre et vous entrez dans dans la pièce. Tandis que vous y jetez un coup d'oeil, "
+                "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
+                "un homme aux allures de sauvage bondit sur vous en brandissant une hache d'armes. C'est un BARBARE fou, et il vous faut le combattre. ",
+                "", "8");
+    AjouterCombat(effet8, "BARBARE", 7, 6);
+    //        plus la possibilité de se barrer en cours de combat !
+    //AjouterChoixGoToEffet("Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat", "189");
+    effet8->m_GoToEffetId = "273";
+}
+
+void GenSorcMontagneFeu::GenererEffetsGeneriques()
+{
+    AjouterEffetNarration("Vous êtes mort", "", "mort");
 }
 
 void GenSorcMontagneFeu::GenererEvtsAccueil()
