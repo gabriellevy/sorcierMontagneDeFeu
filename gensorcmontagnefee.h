@@ -21,6 +21,7 @@ private:
     // génération des événement et effets de base
     void GenererEvtsAccueil();
     void GenererNumeros1_10();
+    void GenererNumeros11_20();
     void GenererEffetsGeneriques();
 
     // fonction gameplay générales (défis fantastiques en général ??) => faire une classe mère GenDefisFantastiques ?

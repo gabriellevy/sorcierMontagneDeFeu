@@ -18,6 +18,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
     GenererEvtsAccueil();
     GenererNumeros1_10();
+    GenererNumeros11_20();
     GenererEffetsGeneriques();
 
     FinGenerationHistoire();
@@ -220,7 +221,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
                           "probablement des rats qui prennent la fuite. Vous entrez dans la "
                           "caverne. Après avoir parcouru quelques mètres, vous arrivez à une "
                           "bifurcation.",
-           "", "1");
+           ":/images/1.PNG", "1");
     AjouterChoixGoToEffet("Irez-vous vers l'ouest", "71");
     AjouterChoixGoToEffet("ou vers l'est", "278");
 
@@ -279,11 +280,50 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
                            "Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat",
                            "189");
     effet8->m_GoToEffetId = "273";
+
+    // 9
+    AjouterEffetNarration("Stupéfait que votre mensonge ait réussi, vous décidez de pousser un peu plus loin votre chance. "
+                          "Vous pouvez soit examiner les outils du Squelette, soit faire semblant de chercher des feuilles de plans de travail, "
+                          "en fouillant les tiroirs des divers établis. \n"
+                          "Vous entendez un bruit qui vient de derrière la porte située au nord, et vous réalisez qu'il va falloir vous dépêcher ! ",
+                          "", "9");
+    AjouterChoixGoToEffet(" Si vous choisissez les outils", "34");
+    AjouterChoixGoToEffet("Si vous fouillez les tiroirs", "322");
+
+    //10
+    Effet* effet10 = AjouterEffetNarration("Vous êtes revenu à la bifurcation et vous prenez la direction du nord. ",
+                          "", "10");
+    effet7->m_GoToEffetId = "77";
 }
 
 void GenSorcMontagneFeu::GenererEffetsGeneriques()
 {
     AjouterEffetNarration("Vous êtes mort", "", "mort");
+}
+
+void GenSorcMontagneFeu::GenererNumeros11_20()
+{
+    //11
+    Effet* effet11 = AjouterEffetNarration("Vous suivez le passage vers l'ouest jusqu'à ce qu'il tourne vers le sud. "
+                          "Juste avant ce coude, il y a une pancarte qui indique : « En "
+                          "construction. » Devant vous, les premières marches d'un escalier qui "
+                          "descend. Trois marches, seulement ont été construites. Sur le sol sont "
+                          "posés des pelles, des pioches et d'autres outils et lorsque vous avez "
+                          "tourné le coin, ils se mettent soudain à s'agiter et à travailler pour "
+                          "continuer de bâtir l'escalier. Vous voyez maintenant tous ces outils "
+                          "creuser et piocher comme s'ils étaient tenus par des ouvriers invisibles. "
+                          "Une chanson fredonnée s'élève et vous reconnaissez l'air de « Le "
+                          "travail, c'est la Santé ». Devant ce spectacle, vous éclatez de rire. La "
+                          "scène en effet est cocasse. Vous vous asseyez pour observer ces outils "
+                          "magiques ; vous parlez même à certains d'entre eux. Prenez 2 points "
+                          "d'ENDURANCE et 1 point d'HABILETÉ pendant que vous vous "
+                          "détendez. Puis, revenez dans le passage en remontant vers le "
+                          "croisement ; ",
+           ":/images/11.PNG", "11");
+    effet11->AjouterAjouteurACarac(LDOELH::HABILETE, "1");
+    effet11->AjouterAjouteurACarac(LDOELH::ENDURANCE, "2");
+    AjouterChoixGoToEffet("là, vous pouvez choisir d'aller au nord", "366");
+    AjouterChoixGoToEffet("ou au sud", "250");
 }
 
 void GenSorcMontagneFeu::GenererEvtsAccueil()
