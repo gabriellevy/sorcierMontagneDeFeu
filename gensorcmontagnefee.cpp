@@ -87,7 +87,7 @@ LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, in
                                          " ENDURANCE : ";
     effet->m_Texte += "\n\n" + texteCombatBase + QString::number(enduranceDepartMonstre);
 
-    std::function<ResExecutionLancerDe*(int)> lancerHabiliteJoueur = [texteCombatBase, nomMonstre, habileteMonstre, enduranceDepartMonstre](int i) {
+    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [texteCombatBase, nomMonstre, habileteMonstre, enduranceDepartMonstre](int i) {
         QString resTxt = "";
         QString phaseActuelle = GestionnaireCarac::GetCaracValue(LDOELH::PHASE_COMBAT);
         QString phaseJoueur = "phaseJoueur";
@@ -163,7 +163,7 @@ LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, in
         return new ResExecutionLancerDe(resTxt, combatContinue);
     };
 
-    return m_GenerateurEvt->AjouterLancerDe("Combat", 2, lancerHabiliteJoueur);
+    return m_GenerateurEvt->AjouterLancerDe("Combattre", 2, lancerHabilite);
 }
 
 
@@ -324,6 +324,72 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet11->AjouterAjouteurACarac(LDOELH::ENDURANCE, "2");
     AjouterChoixGoToEffet("là, vous pouvez choisir d'aller au nord", "366");
     AjouterChoixGoToEffet("ou au sud", "250");
+
+    //12
+    Effet* effet12 = AjouterEffetNarration(
+                "Au moment où vous tirez la poignée, un bruit métallique assourdissant "
+                "retentit dans le passage. Vous la repoussez frénétiquement pour arrêter "
+                "le signal d'alarme, mais il a déjà produit son effet. Vous entendez des "
+                "bruits de pas qui s'approchent dans le couloir.",
+           "", "12");
+    Effet* effet161_12 = GenererNumeros161();
+    AjouterChoixGoToEffet("vous pouvez soit retourner à la bifurcation", "256", "", effet161_12);
+    AjouterChoixGoToEffet("soit pousser la poignée", "364", "", effet161_12);
+
+
+}
+
+int GenSorcMontagneFeu::Num161_COUNTER = 0;
+Effet* GenSorcMontagneFeu::GenererNumeros161()
+{
+    QString id = "161_" + QString::number(GenSorcMontagneFeu::Num161_COUNTER++);
+    Effet* effet161 = AjouterEffetNarration(
+                "En cherchant des portes et des passages secrets, vous avez sondé, martelé, "
+                "raclé la paroi rocheuse, et tous ces bruits ont résonné dans les couloirs "
+                "de la montagne. Diverses créatures vagabondent librement dans les "
+                "souterrains, et ce vacarme a attiré l'attention de l'un des monstres "
+                "suivants.", "", id);
+
+    QString nomCreature = "??";
+    int habileteCreature = -1;
+    int enduranceCreature = -1;
+
+    switch (Aleatoire::GetAl()->D6()) {
+    case 1 :
+        nomCreature = "LUTIN";
+        habileteCreature = 5;
+        enduranceCreature = 3;
+        break;
+    case 2 :
+        nomCreature = "FARFADET";
+        habileteCreature = 6;
+        enduranceCreature = 3;
+        break;
+    case 3 :
+        nomCreature = "DIABLOTIN";
+        habileteCreature = 6;
+        enduranceCreature = 4;
+        break;
+    case 4 :
+        nomCreature = "RAG GÉANT";
+        habileteCreature = 5;
+        enduranceCreature = 4;
+        break;
+    case 5 :
+        nomCreature = "SQUELETTE";
+        habileteCreature = 6;
+        enduranceCreature = 5;
+        break;
+    case 6 :
+        nomCreature = "TROLL";
+        habileteCreature = 8;
+        enduranceCreature = 4;
+        break;
+    }
+
+    AjouterCombat(effet161, nomCreature, habileteCreature,enduranceCreature);
+
+    return effet161;
 }
 
 void GenSorcMontagneFeu::GenererEvtsAccueil()
