@@ -336,6 +336,34 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     AjouterChoixGoToEffet("vous pouvez soit retourner à la bifurcation", "256", "", effet161_12);
     AjouterChoixGoToEffet("soit pousser la poignée", "364", "", effet161_12);
 
+    //13
+    Effet* effet13 = AjouterEffetNarration(
+                "Votre tête vous fait mal et vous vous sentez tout étourdi en vous "
+                "relevant. Les quatre hommes se met-tent en mouvement et s'avancent "
+                "vers vous en file indienne, leurs armes prêtes. Vous cherchez votre "
+                "chemin à tâtons le long du mur pour essayer d'atteindre la porte du sud, "
+                "et il s'en faudra d'un cheveu que vous n'y arriviez. Votre pied glisse sur "
+                "un caillou et vous tombez par terre. Avant d'avoir pu vous relever, les "
+                "créatures sont sur vous.",
+           "", "13");
+    effet13->m_GoToEffetId = "282";
+
+    //14
+    Effet* effet14 = AjouterEffetNarration(
+                "Il n'y a pas trace de passage secret ; en revanche, vous entendez des "
+                "bruits de pas qui viennent vers vous.",
+           "", "14");
+    Effet* effet161_14 = GenererNumeros161();
+    effet161_14->m_GoToEffetId = "117";
+
+    //15
+    /*Effet* effet15 = AjouterEffetNarration(
+                "Il n'y a pas trace de passage secret ; en revanche, vous entendez des "
+                "bruits de pas qui viennent vers vous.",
+           "", "15");
+    Effet* effet161_14 = GenererNumeros161();
+    effet161_14->m_GoToEffetId = "117";*/
+    // !!!! créer une fonction de gain d'endurance qui surveille qu'on ne dépasse pas le niveau de départ
 
 }
 
