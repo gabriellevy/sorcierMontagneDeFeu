@@ -38,17 +38,14 @@ void GenSorcMontagneFeu::GenererPersos()
 
 void GenSorcMontagneFeu::GenererCaracs()
 {
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE);
     int habilete = 6 + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::HABILETE, habilete);
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE, habilete, 0, habilete);
 
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::ENDURANCE);
     int endurance = 12 + Aleatoire::GetAl()->D6() + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::ENDURANCE, endurance);
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::ENDURANCE, endurance, 0, endurance);
 
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE);
     int chance = 6 + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->SetValeurACaracId( LDOELH::CHANCE, chance);
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE, chance, 0, chance);
 }
 
 
@@ -291,7 +288,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
     AjouterChoixGoToEffet("Si vous fouillez les tiroirs", "322");
 
     //10
-    Effet* effet10 = AjouterEffetNarration("Vous êtes revenu à la bifurcation et vous prenez la direction du nord. ",
+    /*Effet* effet10 = */AjouterEffetNarration("Vous êtes revenu à la bifurcation et vous prenez la direction du nord. ",
                           "", "10");
     effet7->m_GoToEffetId = "77";
 }
@@ -326,7 +323,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     AjouterChoixGoToEffet("ou au sud", "250");
 
     //12
-    Effet* effet12 = AjouterEffetNarration(
+    /*Effet* effet12 = */AjouterEffetNarration(
                 "Au moment où vous tirez la poignée, un bruit métallique assourdissant "
                 "retentit dans le passage. Vous la repoussez frénétiquement pour arrêter "
                 "le signal d'alarme, mais il a déjà produit son effet. Vous entendez des "
@@ -349,7 +346,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet13->m_GoToEffetId = "282";
 
     //14
-    Effet* effet14 = AjouterEffetNarration(
+    /*Effet* effet14 = */AjouterEffetNarration(
                 "Il n'y a pas trace de passage secret ; en revanche, vous entendez des "
                 "bruits de pas qui viennent vers vous.",
            "", "14");
@@ -357,14 +354,53 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet161_14->m_GoToEffetId = "117";
 
     //15
-    /*Effet* effet15 = AjouterEffetNarration(
-                "Il n'y a pas trace de passage secret ; en revanche, vous entendez des "
-                "bruits de pas qui viennent vers vous.",
+    Effet* effet15 = AjouterEffetNarration(
+                "Tandis que vous êtes assis sur le banc en train de manger, vous vous "
+                "détendez profondément et les courbatures de votre corps semblent """
+                "disparaître d'elles-mêmes. Ce lieu de repos est enchanté. Vous avez "
+                "droit à deux points d'ENDURANCE en plus de ceux que vous rend "
+                "votre repas (mais seulement si ce local n'excède pas vos points "
+                "d'ENDURANCE de départ ; vous pouvez également reprendre 1 point "
+                "D’HABILETÉ si vous en avez perdu. Lorsque vous êtes l'ict à repartir, "
+                "avancez le long du couloir""",
            "", "15");
-    Effet* effet161_14 = GenererNumeros161();
-    effet161_14->m_GoToEffetId = "117";*/
-    // !!!! créer une fonction de gain d'endurance qui surveille qu'on ne dépasse pas le niveau de départ
+    effet15->AjouterAjouteurACarac(LDOELH::ENDURANCE, 2);
+    effet15->AjouterAjouteurACarac(LDOELH::HABILETE, 1);
+    effet15->m_GoToEffetId = "367";
 
+    //16
+    Effet* effet16 = AjouterEffetNarration(
+                "Vous tirez votre épée du fourreau; l'Ogre vous a entendu et se prépare à "
+                "l'attaque",
+           "", "16");
+    AjouterCombatAvecFuite(effet16, "OGRE", 8, 10, "Après le deuxième assaut, vous pouvez fuir le long du corridor.", "269");
+    effet16->m_GoToEffetId = "50";
+
+    //17
+    Effet* effet17 = AjouterEffetNarration(
+                "A l'aide de l'épieu et du maillet (ou d'un maillet de fortune si vous n'en "
+                "avez pas), vous formez une croix et vous avancez vers le Vampire en "
+                "l'acculant dans un coin. Le Vampire siffle et essaye de vous attraper, "
+                "mais il ne peut s'approcher de vous. Il sera cependant difficile de lui "
+                "enfoncer l'épieu dans le coeur. Tandis que vous marchez vers lui, vous "
+                "trébuchez et tombez. Par un coup de chance, l'épieu est projeté en "
+                "avant, et atteint le monstre hurlant. Tentez votre Chance.",
+                "", "17");
+    TenterLaChanceGoTo("vous êtes "
+                       "malchanceux", "17_b", "vous avez eu de la "
+                       "chance, vous avez tué le Vampire, vous pouvez chercher son "
+                       "trésor", "327");
+
+    //17_b
+    Effet* effet17_b = AjouterEffetNarration(
+                "le Vampire est simplement écorché par le coup (enlevezlui "
+                                       "3 points d'ENDURANCE) et il vous rejette en arrière vers la porte "
+                                       "située à l'ouest.",
+                "", "17_b");
+    // je pars du principe qu'ona déjà appliqué à l'endurance ennemie celle du vampire
+    effet17_b->AjouterRetireurACarac(LDOELH::ENDURANCE_ENNEMI, 3);
+    AjouterChoixGoToEffet("Si vous fuyez par cette porte", "380");
+    AjouterChoixGoToEffet("Si vous continuez à combattre", "144");
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
