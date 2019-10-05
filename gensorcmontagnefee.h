@@ -4,6 +4,9 @@
 #include "../destinLib/genhistoire.h"
 
 class LDOELH;
+struct Creature;
+
+using namespace std;
 
 class GenSorcMontagneFeu : public GenHistoire
 {
@@ -31,10 +34,11 @@ private:
 
     // fonction gameplay générales (défis fantastiques en général ??) => faire une classe mère GenDefisFantastiques ?
     void TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
-                       QString texteChanceux, QString effet_chanceux_id);
+                       QString texteChanceux, QString effet_chanceux_id,
+                       function<void()> malchanceuxCallback = nullptr, function<void()> chanceuxCallback = nullptr);
 
-    LancerDe* AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre);
-    void AjouterCombatAvecFuite(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceMonstre, QString texteFuite, QString idFuite);
+    LancerDe* AjouterCombat(Effet* effet, QVector<Creature> creatures);
+    void AjouterCombatAvecFuite(Effet* effet, QVector<Creature> creatures, QString texteFuite, QString idFuite);
 
 };
 

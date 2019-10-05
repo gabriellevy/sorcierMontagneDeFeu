@@ -71,33 +71,42 @@ ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
 }
 
 void GenSorcMontagneFeu::AjouterCombatAvecFuite(
-        Effet* effet, QString nomMonstre, int habileteMonstre,
-        int enduranceDepartMonstre, QString texteFuite, QString idFuite)
+        Effet* effet, QVector<Creature> creatures, QString texteFuite, QString idFuite)
 {
-    LancerDe* combat = AjouterCombat(effet, nomMonstre, habileteMonstre, enduranceDepartMonstre);
+    LancerDe* combat = AjouterCombat(effet, creatures);
     m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
 }
 
-LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, int habileteMonstre, int enduranceDepartMonstre)
+LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QVector<Creature> creatures)
 {
-    QString texteCombatBase = nomMonstre + " - HABILITÉ : " + QString::number(habileteMonstre) +
-                                         " ENDURANCE : ";
-    effet->m_Texte += "\n\n" + texteCombatBase + QString::number(enduranceDepartMonstre);
+    QString texteToutCombat = "";
+    QVector<QString> textesChaqueCombat = {};
 
-    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [texteCombatBase, nomMonstre, habileteMonstre, enduranceDepartMonstre](int i) {
+    for (int i = 0 ; i < creatures.length(); ++i) {
+        QString texteCombCreat = creatures[i].m_Nom + " - HABILITÉ : " +
+                QString::number(creatures[i].m_Habilete) +
+                " ENDURANCE : ";
+        textesChaqueCombat.push_back(texteCombCreat);
+        texteToutCombat += ( texteCombCreat + QString::number(creatures[i].m_Endurance) + "\n\n");
+    }
+
+    effet->m_Texte += "\n\n" + texteToutCombat;
+
+    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [textesChaqueCombat, creatures](int i) {
         QString resTxt = "";
         QString phaseActuelle = GestionnaireCarac::GetCaracValue(LDOELH::PHASE_COMBAT);
         QString phaseJoueur = "phaseJoueur";
         QString phaseEnnemi = "phaseEnnemi";
+        int indexCombat = GestionnaireCarac::GetCaracValueAsInt(LDOELH::NUM_DE_COMBAT);
         bool combatContinue = true;
         int enduranceActuelleMonstre = GestionnaireCarac::GetCaracValueAsInt(LDOELH::ENDURANCE_ENNEMI);
         if ( enduranceActuelleMonstre <= 0) {
-            enduranceActuelleMonstre = enduranceDepartMonstre;
+            enduranceActuelleMonstre = creatures[indexCombat].m_Endurance;
             GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
         }
 
-        std::function<QString()> getIntituleCombat = [texteCombatBase]() {
-            return "\n\n" + texteCombatBase + GestionnaireCarac::GetCaracValue(LDOELH::ENDURANCE_ENNEMI);
+        std::function<QString()> getIntituleCombat = [textesChaqueCombat, indexCombat]() {
+            return "\n\n" + textesChaqueCombat[indexCombat] + GestionnaireCarac::GetCaracValue(LDOELH::ENDURANCE_ENNEMI);
         };
 
         if ( phaseActuelle == "")
@@ -113,8 +122,8 @@ LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, in
             GestionnaireCarac::SetValeurACaracId(LDOELH::PHASE_COMBAT, phaseEnnemi);
         } else {
             // le monstre attaque et on résoud le duel
-            int resEnnemi = habileteMonstre + i;
-            resTxt  = nomMonstre + ", force d'attaque  : "  + QString::number(resEnnemi);
+            int resEnnemi = creatures[indexCombat].m_Habilete + i;
+            resTxt  = creatures[indexCombat].m_Nom + ", force d'attaque  : "  + QString::number(resEnnemi);
             GestionnaireCarac::SetValeurACaracId(LDOELH::RES_ATTAQUE_ENNEMI, resEnnemi);
 
             int resJoueur = GestionnaireCarac::GetCaracValueAsInt(LDOELH::RES_ATTAQUE_JOUEUR);
@@ -125,8 +134,21 @@ LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, in
                 GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
                 if ( enduranceActuelleMonstre <= 0) {
                     // l'ennemi est mort :
-                    resTxt += "\nL'ennemi est mort. Victoire !";
-                    combatContinue = false;
+                    resTxt += "\nL'ennemi est mort. Victoire ! ";
+
+                    // est-ce qu'il y a d'autres monstres à tuer ?
+                    indexCombat++;
+                    if ( indexCombat < creatures.length()) {
+                        // ennemi suivant :
+                        GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, creatures[indexCombat].m_Endurance);
+                        GestionnaireCarac::SetValeurACaracId(LDOELH::NUM_DE_COMBAT, indexCombat);
+                        combatContinue = true;
+                        resTxt += "Mais il reste encore des ennemis à combatte.";
+
+                    } else {
+                        combatContinue = false;
+                        indexCombat = 0;
+                    }
                 } else {
                     // l'ennemi est blessé :
                     resTxt += "\nL'ennemi est blessé.";
@@ -166,18 +188,24 @@ LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QString nomMonstre, in
 
 
 void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
-                   QString texteChanceux, QString effet_chanceux_id)
+                   QString texteChanceux, QString effet_chanceux_id,
+                   std::function<void()> malchanceuxCallback, std::function<void()> chanceuxCallback)
 {
-    std::function<ResExecutionLancerDe*(int)> tenter = [texteMalchanceux, effet_malchanceux_id, texteChanceux, effet_chanceux_id](int i) {
+    std::function<ResExecutionLancerDe*(int)> tenter =
+            [texteMalchanceux, effet_malchanceux_id, texteChanceux, effet_chanceux_id, malchanceuxCallback, chanceuxCallback](int i) {
         bool chanceux = TenterLaChance(i);
 
         QString resTxt = "";
 
         if ( chanceux ) {
+            if ( chanceuxCallback != nullptr )
+                chanceuxCallback();
             resTxt += texteChanceux;
             Univers::ME->GetExecHistoire()->EffetActuel()->m_GoToEffetId = effet_chanceux_id;
 
         } else {
+            if ( malchanceuxCallback != nullptr )
+                malchanceuxCallback();
             resTxt += texteMalchanceux;
             Univers::ME->GetExecHistoire()->EffetActuel()->m_GoToEffetId = effet_malchanceux_id;
         }
@@ -273,7 +301,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
                 "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
                 "un homme aux allures de sauvage bondit sur vous en brandissant une hache d'armes. C'est un BARBARE fou, et il vous faut le combattre. ",
                 "", "8");
-    AjouterCombatAvecFuite(effet8, "BARBARE", 7, 6,
+    AjouterCombatAvecFuite(effet8, {Creature("BARBARE", 7, 6)},
                            "Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat",
                            "189");
     effet8->m_GoToEffetId = "273";
@@ -373,18 +401,19 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "Vous tirez votre épée du fourreau; l'Ogre vous a entendu et se prépare à "
                 "l'attaque",
            "", "16");
-    AjouterCombatAvecFuite(effet16, "OGRE", 8, 10, "Après le deuxième assaut, vous pouvez fuir le long du corridor.", "269");
+    AjouterCombatAvecFuite(effet16, {Creature("OGRE", 8, 10)},
+                           "Après le deuxième assaut, vous pouvez fuir le long du corridor.", "269");
     effet16->m_GoToEffetId = "50";
 
     //17
-    Effet* effet17 = AjouterEffetNarration(
+    /*Effet* effet17 = */AjouterEffetNarration(
                 "A l'aide de l'épieu et du maillet (ou d'un maillet de fortune si vous n'en "
                 "avez pas), vous formez une croix et vous avancez vers le Vampire en "
                 "l'acculant dans un coin. Le Vampire siffle et essaye de vous attraper, "
                 "mais il ne peut s'approcher de vous. Il sera cependant difficile de lui "
                 "enfoncer l'épieu dans le coeur. Tandis que vous marchez vers lui, vous "
                 "trébuchez et tombez. Par un coup de chance, l'épieu est projeté en "
-                "avant, et atteint le monstre hurlant. Tentez votre Chance.",
+                "avant, et atteint le monstre hurlant.",
                 "", "17");
     TenterLaChanceGoTo("vous êtes "
                        "malchanceux", "17_b", "vous avez eu de la "
@@ -401,6 +430,30 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet17_b->AjouterRetireurACarac(LDOELH::ENDURANCE_ENNEMI, 3);
     AjouterChoixGoToEffet("Si vous fuyez par cette porte", "380");
     AjouterChoixGoToEffet("Si vous continuez à combattre", "144");
+
+    //18
+    AjouterEffetNarration(
+                "Vous marchez vers l'ouest le long du couloir. Au bout d'une "
+                "cinquantaine de mètres, le passage s'oriente vers le nord. Après avoir "
+                "fait deux ou trois pas dans ce couloir, vous entendez un bruit "
+                "d'éboulement sous vos pieds et vous essayez de sauter en arrière tandis "
+                "que le sol se dérobe.",
+                "", "18");
+    TenterLaChanceGoTo("vous êtes malchanceux, vous n'avez pas été assez rapide et vous tombez "
+                       "dans une fosse de deux mètres de profondeur. Vous perdez 1 point "
+                       "d'ENDURANCE.", "348", "vous êtes chanceux, vous "
+                       "avez réussi à faire un bond en arrière avant qu'un trou ne se forme.", "261",
+                       [] {
+        GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 1);
+    });
+
+    //19
+    Effet* effet19 = AjouterEffetNarration(
+                "Ces deux créatures malfaisantes sont des LUTINS. Ils vous attaquent "
+                "un par un.",
+                "", "19");
+    AjouterCombat(effet19, {Creature( "Premier LUTIN", 5, 5), Creature("Deuxième LUTIN", 5, 6)});
+    effet19->m_GoToEffetId = "317";
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
@@ -451,7 +504,7 @@ Effet* GenSorcMontagneFeu::GenererNumeros161()
         break;
     }
 
-    AjouterCombat(effet161, nomCreature, habileteCreature,enduranceCreature);
+    AjouterCombat(effet161, {Creature(nomCreature, habileteCreature, enduranceCreature)});
 
     return effet161;
 }

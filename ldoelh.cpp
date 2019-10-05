@@ -9,6 +9,7 @@ QString LDOELH::PHASE_COMBAT = "PhaseCombat";
 QString LDOELH::RES_ATTAQUE_JOUEUR = "ResAttaqueJoueur";
 QString LDOELH::RES_ATTAQUE_ENNEMI = "ResAttaqueEnnemi";
 QString LDOELH::ENDURANCE_ENNEMI = "EnduranceEnnemi";
+QString LDOELH::NUM_DE_COMBAT = "NumDeCombat";
 
 
 QString LDOELH::SORCIER_MONTAGNE_FEU = "Le sorcier de la montagne de feu";
