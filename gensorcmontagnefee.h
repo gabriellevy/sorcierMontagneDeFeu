@@ -25,6 +25,7 @@ private:
     void GenererEvtsAccueil();
     void GenererNumeros1_10();
     void GenererNumeros11_20();
+    void GenererNumeros21_30();
 
     // numéro spécial qui peut être appelé de plusieurs endroits différents et a un effet généré pour chacun de ces cas
     // c'est donc un numéro qui existe en plusieurs exemplaires

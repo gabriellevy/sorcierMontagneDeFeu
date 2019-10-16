@@ -6,6 +6,7 @@
 #include "../destinLib/execeffet.h"
 #include "../destinLib/lancerde.h"
 #include "../destinLib/setcarac.h"
+#include "../destinLib/choix.h"
 #include <functional>
 
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
@@ -19,6 +20,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
     GenererEvtsAccueil();
     GenererNumeros1_10();
     GenererNumeros11_20();
+    GenererNumeros21_30();
     GenererEffetsGeneriques();
 
     FinGenerationHistoire();
@@ -74,7 +76,9 @@ void GenSorcMontagneFeu::AjouterCombatAvecFuite(
         Effet* effet, QVector<Creature> creatures, QString texteFuite, QString idFuite)
 {
     LancerDe* combat = AjouterCombat(effet, creatures);
-    m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
+    // fuir implique qu'on perde 2 points d'endurance
+    Choix* choixFuite = m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
+    choixFuite->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
 }
 
 LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QVector<Creature> creatures)
@@ -454,6 +458,52 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "", "19");
     AjouterCombat(effet19, {Creature( "Premier LUTIN", 5, 5), Creature("Deuxième LUTIN", 5, 6)});
     effet19->m_GoToEffetId = "317";
+
+    //19
+    Effet* effet20 = AjouterEffetNarration(
+                "La bagarre commence. Vous avez votre épée, ils ont leurs haches. Ils "
+                "vous affrontent un par un.",
+                "", "20");
+    AjouterCombatAvecFuite(
+        effet19, {
+        Creature( "Premier NAIN", 7, 6),
+        Creature("Deuxième NAIN", 7, 7),
+        Creature("Troisième NAIN", 4, 6),
+        Creature("Quatrième NAIN", 5, 5)
+        },
+        "Si le combat tourne mal, vous pouvez fuir par la porte.- mais n'oubliez pas votre pénalité de fuite.",
+        "371");
+    effet19->m_GoToEffetId = "376";
+}
+
+void GenSorcMontagneFeu::GenererNumeros21_30()
+{
+    //21
+    Effet* effet21 = AjouterEffetNarration(
+                "Le sang verdâtre des farfadets morts s'écoule de leurs corps en "
+                "dégageant une odeur repoussante. Vous contournez les cadavres et vous "
+                "examinez le coffre. Il est solide, fait de chêne et de fer, et bien fermé. ",
+           "", "21");
+    AjouterChoixGoToEffet("Vous pouvez essayer de briser la serrure à l'aide de votre épée", "339");
+    AjouterChoixGoToEffet("ou le laisser et sortir par la porte ouverte", "293");
+    //22
+    Effet* effet22 = AjouterEffetNarration(
+                "Vous furetez un peu partout à la recherche d'une trace de porte secrète, "
+                "mais vous n'en trouvez pas. Tandis que vous faites une pause pour "
+                "réfléchir à la situation, un mince jet de gaz s'échappe du plafond en "
+                "sifflant.Vous toussez à vous en étouffer pour essayer de libérer vos "
+                "poumons, mais rien à faire, vous tombez à genoux, la tête vous tourne "
+                "et vous vous écroulez sur le sol en perdant connaissance. Lorsque vous "
+                "revenez à vous, vous vous trouvez dans un endroit inconnu. ",
+           "", "22");
+    effet22->m_GoToEffetId = "4";
+    //23
+    AjouterEffetNarration(
+                "Le couloir aboutit à une porte bien solide. Vous écoutez au panneau, "
+                "mais vous n'entendez rien. ",
+           "", "23");
+    AjouterChoixGoToEffet("Allez-vous entrer dans la pièce", "326");
+    AjouterChoixGoToEffet("ou retourner à la bifurcation", "229");
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
