@@ -54,6 +54,7 @@ SOURCES += \
     ../destinLib/gestionnairecarac.cpp \
     ../destinLib/aleatoire.cpp \
     aspectratiolabel.cpp \
+    combat.cpp \
     gensorcmontagnefee.cpp \
         main.cpp \
         ldoelh.cpp
@@ -87,6 +88,7 @@ HEADERS += \
     ../destinLib/gestionnairecarac.h \
     ../destinLib/aleatoire.h \
     aspectratiolabel.h \
+    combat.h \
     gensorcmontagnefee.h \
         ldoelh.h
 

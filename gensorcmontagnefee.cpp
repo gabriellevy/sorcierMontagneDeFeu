@@ -8,8 +8,14 @@
 #include "../destinLib/setcarac.h"
 #include "../destinLib/choix.h"
 #include <functional>
+#include "combat.h"
 
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
+
+GenSorcMontagneFeu* GenSorcMontagneFeu::GetGenSorcMontagneFeu()
+{
+    return static_cast<GenSorcMontagneFeu*>(ME);
+}
 
 Hist* GenSorcMontagneFeu::GenererHistoire()
 {
@@ -60,133 +66,6 @@ bool TenterLaChance(int resDe)
     IPerso::GetPersoInterface()->RafraichirAffichage();
 
     return ( resDe < GestionnaireCarac::GetCaracValueAsInt(LDOELH::CHANCE));
-}
-
-ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
-{
-    QString resTxt = "je suis dans l'exécution de ExecutionCombatDe. Résultat du dé : " + QString::number(resDe);
-    //qDebug()<<res<<endl;
-    bool fini = (resDe < 6);
-    if ( fini)
-        resTxt = "Bravo vous avez gagné !";
-    return new ResExecutionLancerDe(resTxt, !fini);
-}
-
-void GenSorcMontagneFeu::AjouterCombatAvecFuite(
-        Effet* effet, QVector<Creature> creatures, QString texteFuite, QString idFuite)
-{
-    LancerDe* combat = AjouterCombat(effet, creatures);
-    // fuir implique qu'on perde 2 points d'endurance
-    Choix* choixFuite = m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
-    choixFuite->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
-}
-
-LancerDe* GenSorcMontagneFeu::AjouterCombat(Effet* effet, QVector<Creature> creatures)
-{
-    QString texteToutCombat = "";
-    QVector<QString> textesChaqueCombat = {};
-
-    for (int i = 0 ; i < creatures.length(); ++i) {
-        QString texteCombCreat = creatures[i].m_Nom + " - HABILITÉ : " +
-                QString::number(creatures[i].m_Habilete) +
-                " ENDURANCE : ";
-        textesChaqueCombat.push_back(texteCombCreat);
-        texteToutCombat += ( texteCombCreat + QString::number(creatures[i].m_Endurance) + "\n\n");
-    }
-
-    effet->m_Texte += "\n\n" + texteToutCombat;
-
-    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [textesChaqueCombat, creatures](int i) {
-        QString resTxt = "";
-        QString phaseActuelle = GestionnaireCarac::GetCaracValue(LDOELH::PHASE_COMBAT);
-        QString phaseJoueur = "phaseJoueur";
-        QString phaseEnnemi = "phaseEnnemi";
-        int indexCombat = GestionnaireCarac::GetCaracValueAsInt(LDOELH::NUM_DE_COMBAT);
-        bool combatContinue = true;
-        int enduranceActuelleMonstre = GestionnaireCarac::GetCaracValueAsInt(LDOELH::ENDURANCE_ENNEMI);
-        if ( enduranceActuelleMonstre <= 0) {
-            enduranceActuelleMonstre = creatures[indexCombat].m_Endurance;
-            GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
-        }
-
-        std::function<QString()> getIntituleCombat = [textesChaqueCombat, indexCombat]() {
-            return "\n\n" + textesChaqueCombat[indexCombat] + GestionnaireCarac::GetCaracValue(LDOELH::ENDURANCE_ENNEMI);
-        };
-
-        if ( phaseActuelle == "")
-            phaseActuelle = phaseJoueur;
-
-        if ( phaseActuelle == phaseJoueur) {
-            // le joueur attaque (lance les dés)
-            int resTotal = GestionnaireCarac::GetCaracValueAsInt(LDOELH::HABILETE) + i;
-            resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
-            GestionnaireCarac::SetValeurACaracId(LDOELH::RES_ATTAQUE_JOUEUR, resTotal);
-
-            // au tour du monstre :
-            GestionnaireCarac::SetValeurACaracId(LDOELH::PHASE_COMBAT, phaseEnnemi);
-        } else {
-            // le monstre attaque et on résoud le duel
-            int resEnnemi = creatures[indexCombat].m_Habilete + i;
-            resTxt  = creatures[indexCombat].m_Nom + ", force d'attaque  : "  + QString::number(resEnnemi);
-            GestionnaireCarac::SetValeurACaracId(LDOELH::RES_ATTAQUE_ENNEMI, resEnnemi);
-
-            int resJoueur = GestionnaireCarac::GetCaracValueAsInt(LDOELH::RES_ATTAQUE_JOUEUR);
-            // conclusion de la phase de combat :
-            if (resJoueur > resEnnemi) {
-                // le joueur a l'avantage :
-                enduranceActuelleMonstre -= 2;
-                GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, enduranceActuelleMonstre);
-                if ( enduranceActuelleMonstre <= 0) {
-                    // l'ennemi est mort :
-                    resTxt += "\nL'ennemi est mort. Victoire ! ";
-
-                    // est-ce qu'il y a d'autres monstres à tuer ?
-                    indexCombat++;
-                    if ( indexCombat < creatures.length()) {
-                        // ennemi suivant :
-                        GestionnaireCarac::SetValeurACaracId(LDOELH::ENDURANCE_ENNEMI, creatures[indexCombat].m_Endurance);
-                        GestionnaireCarac::SetValeurACaracId(LDOELH::NUM_DE_COMBAT, indexCombat);
-                        combatContinue = true;
-                        resTxt += "Mais il reste encore des ennemis à combatte.";
-
-                    } else {
-                        combatContinue = false;
-                        indexCombat = 0;
-                    }
-                } else {
-                    // l'ennemi est blessé :
-                    resTxt += "\nL'ennemi est blessé.";
-                    resTxt += getIntituleCombat();
-                }
-            }
-            else if (resJoueur < resEnnemi)
-            {
-                // le monstre a l'avantage :
-                int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
-                if ( endurance <= 0) {
-                    // perdu... :
-                    resTxt += "\nVous êtes mort.";
-                    combatContinue = false;
-                    Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
-                } else {
-                    // joueur blessé :
-                    resTxt += "\nVous êtes blessé.";
-                    resTxt += getIntituleCombat();
-                }
-            } else {
-                // égalité
-                resTxt += "\nÉgalité.";
-                resTxt += getIntituleCombat();
-            }
-
-            // au tour du joueur
-            GestionnaireCarac::SetValeurACaracId(LDOELH::PHASE_COMBAT, phaseJoueur);
-            IPerso::GetPersoInterface()->RafraichirAffichage();
-        }
-        return new ResExecutionLancerDe(resTxt, combatContinue);
-    };
-
-    return m_GenerateurEvt->AjouterLancerDe("Combattre", 2, lancerHabilite);
 }
 
 
@@ -305,7 +184,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
                 "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
                 "un homme aux allures de sauvage bondit sur vous en brandissant une hache d'armes. C'est un BARBARE fou, et il vous faut le combattre. ",
                 "", "8");
-    AjouterCombatAvecFuite(effet8, {Creature("BARBARE", 7, 6)},
+    Combat::GetCombat()->AjouterCombatAvecFuite(effet8, {new Creature("BARBARE", 7, 6)},
                            "Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat",
                            "189");
     effet8->m_GoToEffetId = "273";
@@ -405,7 +284,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "Vous tirez votre épée du fourreau; l'Ogre vous a entendu et se prépare à "
                 "l'attaque",
            "", "16");
-    AjouterCombatAvecFuite(effet16, {Creature("OGRE", 8, 10)},
+    Combat::GetCombat()->AjouterCombatAvecFuite(effet16, {new Creature("OGRE", 8, 10)},
                            "Après le deuxième assaut, vous pouvez fuir le long du corridor.", "269");
     effet16->m_GoToEffetId = "50";
 
@@ -430,8 +309,10 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                                        "3 points d'ENDURANCE) et il vous rejette en arrière vers la porte "
                                        "située à l'ouest.",
                 "", "17_b");
-    // je pars du principe qu'ona déjà appliqué à l'endurance ennemie celle du vampire
-    effet17_b->AjouterRetireurACarac(LDOELH::ENDURANCE_ENNEMI, 3);
+    // je pars du principe que le combat est entamé (et les créatures associées créées)
+    effet17_b->m_CallbackDisplay = [] {
+        Combat::GetCombat()->GetEnnemiActuel()->m_Endurance -= 3;
+    };
     AjouterChoixGoToEffet("Si vous fuyez par cette porte", "380");
     AjouterChoixGoToEffet("Si vous continuez à combattre", "144");
 
@@ -456,7 +337,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "Ces deux créatures malfaisantes sont des LUTINS. Ils vous attaquent "
                 "un par un.",
                 "", "19");
-    AjouterCombat(effet19, {Creature( "Premier LUTIN", 5, 5), Creature("Deuxième LUTIN", 5, 6)});
+    Combat::GetCombat()->AjouterCombat(effet19, {new Creature( "Premier LUTIN", 5, 5), new Creature("Deuxième LUTIN", 5, 6)});
     effet19->m_GoToEffetId = "317";
 
     //19
@@ -464,22 +345,22 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "La bagarre commence. Vous avez votre épée, ils ont leurs haches. Ils "
                 "vous affrontent un par un.",
                 "", "20");
-    AjouterCombatAvecFuite(
-        effet19, {
-        Creature( "Premier NAIN", 7, 6),
-        Creature("Deuxième NAIN", 7, 7),
-        Creature("Troisième NAIN", 4, 6),
-        Creature("Quatrième NAIN", 5, 5)
+    Combat::GetCombat()->AjouterCombatAvecFuite(
+        effet20, {
+        new Creature( "Premier NAIN", 7, 6),
+        new Creature("Deuxième NAIN", 7, 7),
+        new Creature("Troisième NAIN", 4, 6),
+        new Creature("Quatrième NAIN", 5, 5)
         },
         "Si le combat tourne mal, vous pouvez fuir par la porte.- mais n'oubliez pas votre pénalité de fuite.",
         "371");
-    effet19->m_GoToEffetId = "376";
+    effet20->m_GoToEffetId = "376";
 }
 
 void GenSorcMontagneFeu::GenererNumeros21_30()
 {
     //21
-    Effet* effet21 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "Le sang verdâtre des farfadets morts s'écoule de leurs corps en "
                 "dégageant une odeur repoussante. Vous contournez les cadavres et vous "
                 "examinez le coffre. Il est solide, fait de chêne et de fer, et bien fermé. ",
@@ -554,7 +435,8 @@ Effet* GenSorcMontagneFeu::GenererNumeros161()
         break;
     }
 
-    AjouterCombat(effet161, {Creature(nomCreature, habileteCreature, enduranceCreature)});
+    Combat::GetCombat()->AjouterCombat(effet161, {
+          new Creature(nomCreature, habileteCreature, enduranceCreature)});
 
     return effet161;
 }

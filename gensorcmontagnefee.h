@@ -4,7 +4,7 @@
 #include "../destinLib/genhistoire.h"
 
 class LDOELH;
-struct Creature;
+class Combat;
 
 using namespace std;
 
@@ -14,6 +14,8 @@ public:
     GenSorcMontagneFeu();
 
     virtual Hist* GenererHistoire();
+
+    static GenSorcMontagneFeu* GetGenSorcMontagneFeu();
 
 protected:
     // génère toutes les caracs qui peuvent être visualisées par le joueur (d'autres caracs peuvent être générées et invisibles n'importe quand dans l'aventure)
@@ -37,9 +39,6 @@ private:
     void TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
                        QString texteChanceux, QString effet_chanceux_id,
                        function<void()> malchanceuxCallback = nullptr, function<void()> chanceuxCallback = nullptr);
-
-    LancerDe* AjouterCombat(Effet* effet, QVector<Creature> creatures);
-    void AjouterCombatAvecFuite(Effet* effet, QVector<Creature> creatures, QString texteFuite, QString idFuite);
 
 };
 
