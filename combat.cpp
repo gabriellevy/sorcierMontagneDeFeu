@@ -5,12 +5,6 @@
 #include "../destinLib/choix.h"
 #include "../destinLib/execeffet.h"
 
-QString Combat::PHASE_COMBAT = "PhaseCombat";
-QString Combat::RES_ATTAQUE_JOUEUR = "ResAttaqueJoueur";
-QString Combat::RES_ATTAQUE_ENNEMI = "ResAttaqueEnnemi";
-QString Combat::ENDURANCE_ENNEMI = "EnduranceEnnemi";
-QString Combat::NUM_DE_COMBAT = "NumDeCombat";
-
 Combat::Combat()
 {
     ME = this;
@@ -58,7 +52,7 @@ void Combat::FinirCombat()
     m_NumDeCombat = 0;
     m_ResAttaqueJoueur = -1;
     m_ResAttaqueEnnemi = -1;
-    m_PhaseCombat = PhaseCombat::AttaqueJoueur;
+    m_PhaseCombat = PhaseCombat::AucunCombatEnCours;
     m_NbBlessuresRecues = 0;
 }
 
@@ -67,100 +61,114 @@ Creature* Combat::GetEnnemiActuel()
     return m_Ennemis[m_NumDeCombat];
 }
 
+QString Combat::GetIntituleCombat(int indexCreature)
+{
+    if ( indexCreature == -1 )
+        indexCreature = m_NumDeCombat;
+    QString msg = "indexCreature trop grand pour ce combat : " + QString::number(indexCreature);
+    Q_ASSERT_X(indexCreature < m_Ennemis.length(), msg.toStdString().c_str(), "Combat::GetIntituleCombat");
+
+    Creature* creature = m_Ennemis[indexCreature];
+    QString intitutle = creature->m_Nom + " - HABILITÉ : " +
+            QString::number(creature->m_Habilete) +
+            " ENDURANCE : " + QString::number(creature->m_Endurance);
+
+    return intitutle;
+}
+
+bool Combat::TourDeCombat(int resDes, QString &resTxt)
+{
+    bool combatContinue = true;
+    Creature* creature = GetEnnemiActuel();
+
+    if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
+        // le joueur attaque (lance les dés)
+        int resTotal = GestionnaireCarac::GetCaracValueAsInt(LDOELH::HABILETE) + resDes;
+        resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
+        m_ResAttaqueJoueur = resTotal;
+
+        // au tour du monstre :
+        m_PhaseCombat = PhaseCombat::AttaqueEnnemi;
+    } else {
+        // le monstre attaque et on résoud le duel
+        int resEnnemi = GetEnnemiActuel()->m_Habilete + resDes;
+        resTxt  = GetEnnemiActuel()->m_Nom + ", force d'attaque  : "  + QString::number(resEnnemi);
+        m_ResAttaqueEnnemi = resEnnemi;
+
+        // conclusion de la phase de combat :
+        if (m_ResAttaqueJoueur > m_ResAttaqueEnnemi) {
+            // le joueur a l'avantage :
+            creature->m_Endurance -= 2;
+            if ( creature->m_Endurance <= 0) {
+                // l'ennemi est mort :
+                resTxt += "\nL'ennemi est mort. Victoire ! ";
+
+                // est-ce qu'il y a d'autres monstres à tuer ?
+                m_NumDeCombat++;
+                if ( m_NumDeCombat < m_Ennemis.length()) {
+                    // ennemi suivant
+                    combatContinue = true;
+                    resTxt += "Mais il reste encore des ennemis à combatte.";
+
+                } else {
+                    combatContinue = false;
+                    FinirCombat();
+                }
+            } else {
+                // l'ennemi est blessé :
+                resTxt += "\nL'ennemi est blessé.";
+                resTxt += "\n\n" + GetIntituleCombat();
+            }
+        }
+        else if (m_ResAttaqueJoueur < resEnnemi)
+        {
+            // le monstre a l'avantage :
+            int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
+            m_NbBlessuresRecues++;
+            if ( endurance <= 0) {
+                // perdu... :
+                resTxt += "\nVous êtes mort.";
+                combatContinue = false;
+                Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
+            } else {
+                // joueur blessé :
+                resTxt += "\nVous êtes blessé.";
+                resTxt += "\n\n" + GetIntituleCombat();
+            }
+        } else {
+            // égalité
+            resTxt += "\nÉgalité.";
+            resTxt += "\n\n" + GetIntituleCombat();
+        }
+
+        // au tour du joueur
+        m_PhaseCombat = PhaseCombat::AttaqueJoueur;
+        IPerso::GetPersoInterface()->RafraichirAffichage();
+    }
+
+    return combatContinue;
+}
+
 LancerDe* Combat::AjouterCombat(Effet* effet, QVector<Creature*> creatures)
 {
     QString texteToutCombat = "";
-    QVector<QString> textesChaqueCombat = {};
     GenSorcMontagneFeu* genSorcMontagneFeu = GenSorcMontagneFeu::GetGenSorcMontagneFeu();
 
-    for (int i = 0 ; i < creatures.length(); ++i) {
-        QString texteCombCreat = creatures[i]->m_Nom + " - HABILITÉ : " +
-                QString::number(creatures[i]->m_Habilete) +
-                " ENDURANCE : ";
-        textesChaqueCombat.push_back(texteCombCreat);
-        texteToutCombat += ( texteCombCreat + QString::number(creatures[i]->m_Endurance) + "\n\n");
+    m_Ennemis = creatures;
+    for (int i = 0 ; i < m_Ennemis.length(); ++i) {
+        texteToutCombat += (GetIntituleCombat(i) + "\n");
     }
 
     effet->m_Texte += "\n\n" + texteToutCombat;
 
-    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [textesChaqueCombat, creatures](int i) {
+    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [creatures](int resDes) {
         Combat* combatActuel = Combat::GetCombat();
-        if ( combatActuel->m_Ennemis.length() == 0)
+        if ( combatActuel->m_PhaseCombat == AucunCombatEnCours)
             combatActuel->CommencerCombat(creatures);
 
         QString resTxt = "";
-        QString phaseJoueur = "phaseJoueur";
-        QString phaseEnnemi = "phaseEnnemi";
-        bool combatContinue = true;
-        Creature* creature = combatActuel->GetEnnemiActuel();
+        bool combatContinue = combatActuel->TourDeCombat(resDes, resTxt);
 
-        std::function<QString()> getIntituleCombat = [textesChaqueCombat, combatActuel]() {
-            return "\n\n" + textesChaqueCombat[combatActuel->m_NumDeCombat] + QString::number(combatActuel->GetEnnemiActuel()->m_Endurance);
-        };
-
-        if ( combatActuel->m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
-            // le joueur attaque (lance les dés)
-            int resTotal = GestionnaireCarac::GetCaracValueAsInt(LDOELH::HABILETE) + i;
-            resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
-            combatActuel->m_ResAttaqueJoueur = resTotal;
-
-            // au tour du monstre :
-            combatActuel->m_PhaseCombat = PhaseCombat::AttaqueEnnemi;
-        } else {
-            // le monstre attaque et on résoud le duel
-            int resEnnemi = combatActuel->GetEnnemiActuel()->m_Habilete + i;
-            resTxt  = combatActuel->GetEnnemiActuel()->m_Nom + ", force d'attaque  : "  + QString::number(resEnnemi);
-            combatActuel->m_ResAttaqueEnnemi = resEnnemi;
-
-            // conclusion de la phase de combat :
-            if (combatActuel->m_ResAttaqueJoueur > combatActuel->m_ResAttaqueEnnemi) {
-                // le joueur a l'avantage :
-                creature->m_Endurance -= 2;
-                if ( creature->m_Endurance <= 0) {
-                    // l'ennemi est mort :
-                    resTxt += "\nL'ennemi est mort. Victoire ! ";
-
-                    // est-ce qu'il y a d'autres monstres à tuer ?
-                    combatActuel->m_NumDeCombat++;
-                    if ( combatActuel->m_NumDeCombat < creatures.length()) {
-                        // ennemi suivant
-                        combatContinue = true;
-                        resTxt += "Mais il reste encore des ennemis à combatte.";
-
-                    } else {
-                        combatContinue = false;
-                        combatActuel->FinirCombat();
-                    }
-                } else {
-                    // l'ennemi est blessé :
-                    resTxt += "\nL'ennemi est blessé.";
-                    resTxt += getIntituleCombat();
-                }
-            }
-            else if (combatActuel->m_ResAttaqueJoueur < resEnnemi)
-            {
-                // le monstre a l'avantage :
-                int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
-                if ( endurance <= 0) {
-                    // perdu... :
-                    resTxt += "\nVous êtes mort.";
-                    combatContinue = false;
-                    Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
-                } else {
-                    // joueur blessé :
-                    resTxt += "\nVous êtes blessé.";
-                    resTxt += getIntituleCombat();
-                }
-            } else {
-                // égalité
-                resTxt += "\nÉgalité.";
-                resTxt += getIntituleCombat();
-            }
-
-            // au tour du joueur
-            combatActuel->m_PhaseCombat = PhaseCombat::AttaqueJoueur;
-            IPerso::GetPersoInterface()->RafraichirAffichage();
-        }
         return new ResExecutionLancerDe(resTxt, combatContinue);
     };
 

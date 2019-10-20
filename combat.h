@@ -13,6 +13,7 @@ struct Creature {
 };
 
 enum PhaseCombat {
+    AucunCombatEnCours,
     AttaqueJoueur,
     AttaqueEnnemi
 };
@@ -23,6 +24,7 @@ struct Creature;
  * @brief gère les combats en général
  * Utilisée lors de la construction  des combats en phase génération.
  * Une fois en pahse d'exécution elle contient les données du combat actuel si il y en a un.
+ * => pourrait être un de ces jours divisé en GenCombat, COmbat, et ExecCombat si tout cela devient trop bordellique
  */
 class Combat
 {
@@ -41,18 +43,15 @@ public:
     int m_NumDeCombat;// quand il y a plusieurs monstres à affronter l'un derrière l'autre (premier = 0)
     int m_ResAttaqueJoueur;
     int m_ResAttaqueEnnemi;
-    PhaseCombat m_PhaseCombat;
+    PhaseCombat m_PhaseCombat = AucunCombatEnCours;
     QVector<Creature*> m_Ennemis = {};
     int m_NbBlessuresRecues;
-    static QString PHASE_COMBAT; // qui est en train de frapper
-    static QString NUM_DE_COMBAT;
-    static QString RES_ATTAQUE_JOUEUR;
-    static QString RES_ATTAQUE_ENNEMI;
-    static QString ENDURANCE_ENNEMI;
 
     // fonctions "runtime"
     void CommencerCombat(QVector<Creature*> creatures);
     void FinirCombat();
+    bool TourDeCombat(int resDes, QString &resTxt);
+    QString GetIntituleCombat(int indexCombat = -1);
 };
 
 #endif // COMBAT_H
