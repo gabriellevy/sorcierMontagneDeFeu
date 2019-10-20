@@ -3,13 +3,29 @@
 
 #include "../destinLib/lancerde.h"
 
+
+enum CapaciteCreature {
+    SuceurHabilete // retire un point d'habileté au joueur chaque fois qu'il le blesse 3 fois
+};
+
 struct Creature {
-    Creature(QString nom, int hab, int end):m_Nom(nom), m_Habilete(hab), m_Endurance(end) {}
+    Creature(QString nom, int hab, int end, QVector<CapaciteCreature> capacites = {})
+        :m_Nom(nom), m_Habilete(hab), m_Endurance(end), m_CapacitesCreature(capacites) {}
     Creature() {}
 
     QString m_Nom = "chais pas";
     int m_Habilete = -1;
     int m_Endurance = -1;
+
+    QVector<CapaciteCreature> m_CapacitesCreature = {};
+
+    bool ACetteCapacite(CapaciteCreature capaciteCreature) {
+        for (int var = 0; var < m_CapacitesCreature.length(); ++var) {
+            if ( m_CapacitesCreature[var] == capaciteCreature )
+                return true;
+        }
+        return false;
+    }
 };
 
 enum PhaseCombat {
@@ -47,11 +63,13 @@ public:
     QVector<Creature*> m_Ennemis = {};
     int m_NbBlessuresRecues;
 
-    // fonctions "runtime"
+    // fonctions "runtime" : ne peuvent être appelée que lors de l'exécution du combat, et donc qu'il y a au moins une créature vivante
     void CommencerCombat(QVector<Creature*> creatures);
     void FinirCombat();
     bool TourDeCombat(int resDes, QString &resTxt);
     QString GetIntituleCombat(int indexCombat = -1);
+    void AjouterCaracAMonstre(CapaciteCreature capaciteCreature);
+    void AjouterFuiteAuCombat(QString texteFuite, QString idFuite);
 };
 
 #endif // COMBAT_H

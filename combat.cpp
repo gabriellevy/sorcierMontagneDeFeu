@@ -4,6 +4,8 @@
 #include "ldoelh.h"
 #include "../destinLib/choix.h"
 #include "../destinLib/execeffet.h"
+#include "../destinLib/execlancerde.h"
+#include "../destinLib/execchoix.h"
 
 Combat::Combat()
 {
@@ -34,6 +36,12 @@ void Combat::AjouterCombatAvecFuite(
     // fuir implique qu'on perde 2 points d'endurance
     Choix* choixFuite = genSorcMontagneFeu->m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
     choixFuite->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
+}
+
+void Combat::AjouterFuiteAuCombat(QString texteFuite, QString idFuite)
+{
+    ExecChoix* execChoix = Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->AjoutChoixGoToEffet(texteFuite, idFuite);
+    execChoix->m_Choix->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
 }
 
 void Combat::CommencerCombat(QVector<Creature*> creatures)
@@ -74,6 +82,12 @@ QString Combat::GetIntituleCombat(int indexCreature)
             " ENDURANCE : " + QString::number(creature->m_Endurance);
 
     return intitutle;
+}
+
+
+void Combat::AjouterCaracAMonstre(CapaciteCreature capaciteCreature)
+{
+    this->GetEnnemiActuel()->m_CapacitesCreature.push_back(capaciteCreature);
 }
 
 bool Combat::TourDeCombat(int resDes, QString &resTxt)
@@ -125,6 +139,9 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
             // le monstre a l'avantage :
             int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
             m_NbBlessuresRecues++;
+            if ( m_NbBlessuresRecues%3 == 0 && creature->ACetteCapacite(SuceurHabilete)) {
+                GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
+            }
             if ( endurance <= 0) {
                 // perdu... :
                 resTxt += "\nVous êtes mort.";

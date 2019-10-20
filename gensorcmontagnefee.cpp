@@ -378,6 +378,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
                 "revenez à vous, vous vous trouvez dans un endroit inconnu. ",
            "", "22");
     effet22->m_GoToEffetId = "4";
+
     //23
     AjouterEffetNarration(
                 "Le couloir aboutit à une porte bien solide. Vous écoutez au panneau, "
@@ -385,6 +386,25 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
            "", "23");
     AjouterChoixGoToEffet("Allez-vous entrer dans la pièce", "326");
     AjouterChoixGoToEffet("ou retourner à la bifurcation", "229");
+
+    //24
+    Effet* effet24 = AjouterEffetNarration(
+                "Après avoir subi votre troisième blessure, vous remarquez que votre "
+                "force décline. Vous perdez 1 point d'HABILETÉ. Vous en déduisez "
+                "qu'il s'agit, là encore, d'un pouvoir magique de la repoussante créature "
+                "et vous vous sentez parcouru d'un frisson de panique. Allez-vous "
+                "continuer ou prendre la fuite ? ",
+           "", "24");
+    // édition du combat actuel en fonction des nouvelles infos :
+    effet24->m_CallbackDisplay = [] {
+        GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 2);
+        Combat* combatActuel = Combat::GetCombat();
+        combatActuel->AjouterCaracAMonstre(SuceurHabilete);
+        combatActuel->AjouterFuiteAuCombat("Si vous choisissez de vous enfuir, échappez vous par "
+                                           "la porte située au nord", "360");
+        // maj du go to final
+        Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "135";
+    };
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
