@@ -397,7 +397,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
            "", "24");
     // édition du combat actuel en fonction des nouvelles infos :
     effet24->m_CallbackDisplay = [] {
-        GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 2);
+        GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
         Combat* combatActuel = Combat::GetCombat();
         combatActuel->AjouterCaracAMonstre(SuceurHabilete);
         combatActuel->AjouterFuiteAuCombat("Si vous choisissez de vous enfuir, échappez vous par "
@@ -405,7 +405,140 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
         // maj du go to final
         Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "135";
     };
+    //25
+    Effet* effet25 = AjouterEffetNarration(
+                "Les peintures sont des portraits d'hommes. Un frisson vous parcourt "
+                "l'échiné lorsque vous lisez sur une plaque le nom de celui qui se trouve "
+                "sur le mur ouest - il s'agit de Zagor, le Sorcier dont vous cherchez le "
+                "trésor. En regardant ce portrait, vous vous rendez compte que vous "
+                "vous mesurez à un adversaire redoutable. Vous avez le sentiment d'être "
+                "observé et vous remarquez les yeux perçants qui suivent chacun de vos "
+                "mouvements. Vous vous sentez attiré vers ce portrait et votre peur "
+                "s'accroît. Vous perdez un point d'HABILETÉ. Avez-vous le courage "
+                "d'essayer de combattre le Sorcier ? ",
+           "", "25");
+    effet25->AjouterRetireurACarac(LDOELH::HABILETE, 1);
+    Choix* fuite = AjouterChoixGoToEffet("Vous pouvez soit sortir tout droit "
+                          "par la porte nord mais il s'agira alors d'une fuite", "90");
+    fuite->AjouterRetireurACarac(LDOELH::ENDURANCE, 2);
+    AjouterChoixGoToEffet("soit chercher dans votre sac à dos une arme que vous pourriez utiliser "
+                          "pour combattre le pouvoir du Sorcier", "340");
+
+
+    //26
+    Effet* effet26 = AjouterEffetNarration(
+                "Vous vous rappelez le petit livre à la reliure de cuir de Di Maggio, et "
+                "vous prononcez silencieusement, du bout des lèvres, la formule "
+                "magique enfermée dans ses pages. \n\n"
+                "Vous poussez un grand cri en direction du Dragon, et il s'immobilise. Il "
+                "penche la tête de côté et vous regarde d'un air soupçonneux. Vous lui "
+                "jetez une pierre à la tête et elle rebondit sur son mufle. La bête laisse "
+                "échapper un cri de colère et prend une profonde inspiration qui "
+                "provoque un rugissement dans sa gorge. Le Dragon souffle et vous "
+                "apercevez entre ses dents une autre boule de feu en train de se former. "
+                "Vous vous tenez prêt, et lorsque la boule de feu jaillit de sa gueule, "
+                "vous vous écriez : \n\n"
+                "Ekil Erif Ekam Erif Erif Erif Di Maggio \n\n"
+                "La boule de feu s'arrête aussitôt. Avec un cri de douleur, le Dragon "
+                "essaye d'éloigner les flammes de son museau, mais elles continuent de "
+                "le brûler. En poussant de terribles hurlements, le monstre fait volte-face "
+                "et bondit dans les ténèbres, secouant sa tête en tous sens. ",
+           "", "26");
+    effet26->m_GoToEffetId = "371";
+
+    //27
+    Effet* effet27 = AjouterEffetNarration(
+                "L'épée est une épée magique, et elle vous aidera à combattre. Aussi "
+                "longtemps que vous vous servirez de cette épée, vous pourrez "
+                "augmenter de 2 points votre total de départ en matière d'HABILETÉ. "
+                "Vous pouvez également ajouter deux points à votre total actuel "
+                "d'HABILETÉ. Vous gagnez également 2 points de CHANCE pour "
+                "avoir trouvé cette épée.",
+           "", "27");
+    effet27->AjouterAjouteurACarac(LDOELH::HABILETE, 2);
+    effet27->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
+    effet27->AjouterSetCaracTrue(GenSorcMontagneFeu::EPEE_MAGIQUE);
+    AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "319");
+    Choix* garderEpee = AjouterChoixGoToEffet("Si vous préférez conserver votre propre épée", "319");
+    garderEpee->AjouterRetireurACarac(LDOELH::HABILETE, 2);
+    garderEpee->AjouterChangeurDeCarac(GenSorcMontagneFeu::EPEE_MAGIQUE, "");
+
+    //28
+    Effet* effet28 = AjouterEffetNarration(
+                "L'énorme Géant est étendu raide mort ! Vous fouillez sa caverne et n'y "
+                "trouvez pas grand-chose d'utile en dehors d'une bourse qu'il porte à sa "
+                "ceinture et qui » ontient 8 Pièces d'Or. Vous êtes un peu inquiet en ce "
+                "qui concerne la deuxième chaise. A qui appartient-elle ? Vous décidez "
+                "de quitter la caverne par le chemin que vous aviez pris. Mais avant cela, ajoutez 2 points de CHANCE et 2 autres "
+                "d'HABILETÉ pour votre victoire.",
+           "", "28");
+    effet28->AjouterAjouteurACarac(LDOELH::HABILETE, 2);
+    effet28->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
+    effet28->m_GoToEffetId = "351";
+
+    //29
+    Effet* effet29 = AjouterEffetNarration(
+                "A part les bottes auxquelles vous décidez de n'accorder aucune "
+                "attention, il y a peu de choses dans la caverne. Vous choisissez de "
+                "rebrousser chemin dans la direction d'où vous êtes venu.",
+           "", "29");
+    effet29->m_GoToEffetId = "375";
+
+    //30
+    Effet* effet30 = AjouterEffetNarration(
+                "Une pierre se détache du roc et révèle une anfractuo-sité dans laquelle "
+                "est cachée une corde.",
+           "", "30");
+    AjouterChoixGoToEffet("Si vous voulez tirer sur la corde", "67");
+    AjouterChoixGoToEffet("Si vous pensez qu'il est plus prudent de n'y point toucher, vous "
+                          "pouvez revenir au croisement", "267");
 }
+
+void GenSorcMontagneFeu::GenererNumeros31_40()
+{
+    //31
+    Effet* effet31 = AjouterEffetNarration(
+                "Si vous êtes en possession de la pierre précieuse arrachée à l'oeil du "
+                "Cyclope, vous la tenez devant le Sorcier. Son regard menaçant se "
+                "transforme alors en une expression de douleur. De toute évidence, il "
+                "ressent le pouvoir de la pierre. Soudain, ses yeux deviennent blancs et "
+                "son visage flasque. Votre confiance en vous-même se renforce lorsque "
+                "vous réalisez que vous venez de gagner votre première vraie bataille. "
+                "Prenez 2 points d'HABILETÉ. Rangez la pierre précieuse dans votre "
+                "sac à dos et sortez par la porte nord.",
+           "", "31");
+    effet31->AjouterAjouteurACarac(LDOELH::HABILETE, 2);
+    effet31->m_GoToEffetId = "90";
+
+    //32
+    Effet* effet32 = AjouterEffetNarration(
+                "Vous lancez le Fromage à travers la pièce en direction des Rats qui se "
+                "battent pour le dévorer, en échangeant des coups de pattes et de dents. "
+                "Ayant ainsi détourné leur attention, il ne vous reste plus qu'à traverser "
+                "la pièce et à sortir par la porte qui s'ouvre dans le mur nord. Prenez 2 points de CHANCE pour prix de votre bonne "
+                "fortune.",
+           "", "32");
+    effet31->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
+    effet31->m_GoToEffetId = "124";
+
+    //33
+    Effet* effet33 = AjouterEffetNarration(
+                "La créature endormie se réveille en sursaut. Elle bondit et se rue sur "
+                "vous, sans arme. Vous devriez pouvoir la vaincre avec votre épée, mais "
+                "ses dents acérées semblent plutôt dangereuses."
+                "FARFADET HABILETÉ: 6 ENDURANCE: 4 "
+                "Si vous êtes vainqueur, vous pouvez prendre la boîte.",
+           "", "33");
+    Combat::GetCombat()->AjouterCombatAvecFuite(
+                effet33,
+                {new Creature("FARFADET", 6, 4)},
+                "Vous avez le droit de prendre fuite par la porte", "320");
+    effet33->m_GoToEffetId = "147";
+
+    // GESTION EQUIPEMENT !!! et attention à l'épée magique plus haut...
+}
+
+QString GenSorcMontagneFeu::EPEE_MAGIQUE = "Épée magique";
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
 Effet* GenSorcMontagneFeu::GenererNumeros161()

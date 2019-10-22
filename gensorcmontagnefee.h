@@ -28,6 +28,7 @@ private:
     void GenererNumeros1_10();
     void GenererNumeros11_20();
     void GenererNumeros21_30();
+    void GenererNumeros31_40();
 
     // numéro spécial qui peut être appelé de plusieurs endroits différents et a un effet généré pour chacun de ces cas
     // c'est donc un numéro qui existe en plusieurs exemplaires
@@ -40,6 +41,8 @@ private:
                        QString texteChanceux, QString effet_chanceux_id,
                        function<void()> malchanceuxCallback = nullptr, function<void()> chanceuxCallback = nullptr);
 
+    // objets spéciaux
+    static QString EPEE_MAGIQUE;// + 2 en habileté
 };
 
 #endif // GENSORCMONTAGNEFEE_H
