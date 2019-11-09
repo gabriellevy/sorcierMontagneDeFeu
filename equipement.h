@@ -16,6 +16,7 @@ public:
     // affecte l'équipement dé départ au personnage et l'affiche
     static void GetEquipementDepart();
     static QList<QString> GetEquipementHeros();
+    static bool HerosACetEquipement(QString equipementId);
 
 
     // tous les types d'équipement existant :
@@ -29,8 +30,9 @@ public:
     static QString POTION_BONNE_FORTUNE;
     static QString EPEE_MAGIQUE;// + 2 en habileté
 
-    // liste de tous els équipements disponibles dans le jeu (permet de déterminer ce qui est un équipement dans la liste des caracs)
-    static QList<QString> EQUIPEMENTS;
+    // liste de tous els équipements disponibles dans le jeu et de leur description
+    // (permet de déterminer ce qui est un équipement dans la liste des caracs)
+    static QMap<QString, QString> EQUIPEMENTS;
 };
 
 #endif // EQUIPEMENT_H

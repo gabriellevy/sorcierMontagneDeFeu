@@ -97,7 +97,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
 
     if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
         // le joueur attaque (lance les dés)
-        int resTotal = GestionnaireCarac::GetCaracValueAsInt(LDOELH::HABILETE) + resDes;
+        int resTotal = IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::HABILETE) + resDes;
         resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
         m_ResAttaqueJoueur = resTotal;
 

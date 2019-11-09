@@ -10,6 +10,7 @@
 #include <functional>
 #include "combat.h"
 #include "equipement.h"
+#include "heros.h"
 
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
 
@@ -40,8 +41,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
 void GenSorcMontagneFeu::GenererPersos()
 {
-    QString nom = "";
-    DPerso* perso = new DPerso(nom, nom, nom, "");
+    DPerso* perso = new Heros();
     perso->InitialiserPerso();
     IPerso::AjouterPersoJouable(perso);
 }
@@ -70,10 +70,8 @@ bool TenterLaChance(int resDe)
     GestionnaireCarac::AJouterValeurACaracId(LDOELH::CHANCE, -1);
     IPerso::GetPersoInterface()->RafraichirAffichage();
 
-    return ( resDe < GestionnaireCarac::GetCaracValueAsInt(LDOELH::CHANCE));
+    return ( resDe < IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::CHANCE));
 }
-
-
 
 void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString effet_malchanceux_id,
                    QString texteChanceux, QString effet_chanceux_id,
@@ -103,7 +101,6 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
     // tenter la chance se fait toujours avec deux dés
     m_GenerateurEvt->AjouterLancerDe("Tentez votre chance", 2, tenter);
 }
-
 
 void GenSorcMontagneFeu::GenererNumeros1_10()
 {
@@ -460,13 +457,12 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
                 "d'HABILETÉ. Vous gagnez également 2 points de CHANCE pour "
                 "avoir trouvé cette épée.",
            "", "27");
-    effet27->AjouterAjouteurACarac(LDOELH::HABILETE, 2);
     effet27->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
-    effet27->AjouterSetCaracTrue(Equipement::EPEE_MAGIQUE);
-    AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "319");
-    Choix* garderEpee = AjouterChoixGoToEffet("Si vous préférez conserver votre propre épée", "319");
-    garderEpee->AjouterRetireurACarac(LDOELH::HABILETE, 2);
-    garderEpee->AjouterChangeurDeCarac(Equipement::EPEE_MAGIQUE, "");
+    //Choix* changerEpee = AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "319");
+    Choix* changerEpee = AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "1");
+    changerEpee->AjouterSetCaracTrue(Equipement::EPEE_MAGIQUE);
+    changerEpee->AjouterChangeurDeCarac(Equipement::EPEE, "");
+    AjouterChoixGoToEffet("Si vous préférez conserver votre propre épée", "319");
 
     //28
     Effet* effet28 = AjouterEffetNarration(
@@ -564,14 +560,14 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 Choix* choix = new Choix(effetActuel, texte );
                 choix->AjouterSetCaracTrue(*it_nouv_eqt);
                 choix->AjouterChangeurDeCarac(*it_eqpts, "");
-                choix->m_GoToEffetId = "96";
+                //choix->m_GoToEffetId = "96";
                 effetActuel->m_Choix.push_back(choix);
             }
         }
         // possibilité de ne rien prendre :
         Choix* choix = new Choix(effetActuel, "Ne rien prendre" );
         effetActuel->m_Choix.push_back(choix);
-        effetActuel->m_GoToEffetId = "96";
+        //effetActuel->m_GoToEffetId = "96";
     };
 }
 

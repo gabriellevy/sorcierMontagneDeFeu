@@ -17,30 +17,31 @@ QString Equipement::POTION_VIGUEUR = "Potion de vigueur";
 QString Equipement::POTION_BONNE_FORTUNE = "Potion de bonne fortune";
 QString Equipement::EPEE_MAGIQUE = "Épée magique";
 
-QList<QString> Equipement::EQUIPEMENTS = {
-    Equipement::MAILLET_METAL,
-    Equipement::CISEAU_LAME_ARGENT,
-    Equipement::EPEE,
-    Equipement::ARMURE_CUIR,
-    Equipement::LANTERNE,
-    Equipement::POTION_ADRESSE,
-    Equipement::POTION_VIGUEUR,
-    Equipement::EPEE_MAGIQUE,
-    Equipement::POTION_BONNE_FORTUNE
+QMap<QString, QString> Equipement::EQUIPEMENTS = {
+    { Equipement::MAILLET_METAL, Equipement::MAILLET_METAL },
+    { Equipement::CISEAU_LAME_ARGENT, Equipement::CISEAU_LAME_ARGENT },
+    { Equipement::EPEE, Equipement::EPEE },
+    { Equipement::ARMURE_CUIR, Equipement::ARMURE_CUIR },
+    { Equipement::LANTERNE, Equipement::LANTERNE },
+    { Equipement::POTION_ADRESSE, Equipement::POTION_ADRESSE },
+    { Equipement::POTION_VIGUEUR, Equipement::POTION_VIGUEUR },
+    { Equipement::EPEE_MAGIQUE, Equipement::EPEE_MAGIQUE + "\nHabileté +2" },
+    { Equipement::POTION_BONNE_FORTUNE, Equipement::POTION_BONNE_FORTUNE }
 };
 
 void Equipement::GetEquipementDepart()
 {
-    QList<QString>::iterator i;
+    QMap<QString, QString>::iterator i;
     for (i = Equipement::EQUIPEMENTS.begin(); i != Equipement::EQUIPEMENTS.end(); ++i) {
+
         GestionnaireCarac::GetGestionnaireCarac()->AjouterCarac(
                     new Carac(
-                        *i,
-                        *i,
+                        i.key(),
+                        i.key(),
                         "",
                         //":/images/equipement/Épée.jpg",
-                        ":/images/equipement/" + *i,
-                        *i,
+                        ":/images/equipement/" + i.key(),
+                        i.value(),
                         MODE_AFFICHAGE::ma_Img
                         )
                     );
@@ -58,14 +59,28 @@ void Equipement::GetEquipementDepart()
 QList<QString> Equipement::GetEquipementHeros()
 {
     QList<QString> equiptActuelHeros = {};
-    QList<QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
-    QList<QString>::iterator it_eqpts_end = Equipement::EQUIPEMENTS.end();
+    QMap<QString, QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
+    QMap<QString, QString>::iterator it_eqpts_end = Equipement::EQUIPEMENTS.end();
 
     for ( ;it_eqpts != it_eqpts_end;++it_eqpts )
     {
-        if ( GestionnaireCarac::IsCaracTrue(*it_eqpts) )
-            equiptActuelHeros.push_back(*it_eqpts);
+        if ( GestionnaireCarac::IsCaracTrue(it_eqpts.key()) )
+            equiptActuelHeros.push_back(it_eqpts.key());
     }
 
     return equiptActuelHeros;
+}
+
+bool Equipement::HerosACetEquipement(QString equipementId)
+{
+    QMap<QString, QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
+    QMap<QString, QString>::iterator it_eqpts_end = Equipement::EQUIPEMENTS.end();
+
+    for ( ;it_eqpts != it_eqpts_end;++it_eqpts )
+    {
+        if ( (it_eqpts.key()) == equipementId )
+            return true;
+    }
+
+    return false;
 }

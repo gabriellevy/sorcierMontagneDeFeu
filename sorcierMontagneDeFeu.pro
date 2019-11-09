@@ -57,6 +57,7 @@ SOURCES += \
     combat.cpp \
     equipement.cpp \
     gensorcmontagnefee.cpp \
+    heros.cpp \
         main.cpp \
         ldoelh.cpp
 
@@ -92,6 +93,7 @@ HEADERS += \
     combat.h \
     equipement.h \
     gensorcmontagnefee.h \
+    heros.h \
         ldoelh.h
 
 FORMS += \
