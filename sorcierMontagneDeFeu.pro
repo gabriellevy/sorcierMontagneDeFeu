@@ -55,6 +55,7 @@ SOURCES += \
     ../destinLib/aleatoire.cpp \
     aspectratiolabel.cpp \
     combat.cpp \
+    equipement.cpp \
     gensorcmontagnefee.cpp \
         main.cpp \
         ldoelh.cpp
@@ -89,6 +90,7 @@ HEADERS += \
     ../destinLib/aleatoire.h \
     aspectratiolabel.h \
     combat.h \
+    equipement.h \
     gensorcmontagnefee.h \
         ldoelh.h
 

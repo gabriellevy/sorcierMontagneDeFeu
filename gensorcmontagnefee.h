@@ -41,8 +41,6 @@ private:
                        QString texteChanceux, QString effet_chanceux_id,
                        function<void()> malchanceuxCallback = nullptr, function<void()> chanceuxCallback = nullptr);
 
-    // objets spéciaux
-    static QString EPEE_MAGIQUE;// + 2 en habileté
 };
 
 #endif // GENSORCMONTAGNEFEE_H

@@ -9,6 +9,7 @@
 #include "../destinLib/choix.h"
 #include <functional>
 #include "combat.h"
+#include "equipement.h"
 
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
 
@@ -27,6 +28,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
     GenererNumeros1_10();
     GenererNumeros11_20();
     GenererNumeros21_30();
+    GenererNumeros31_40();
     GenererEffetsGeneriques();
 
     FinGenerationHistoire();
@@ -38,7 +40,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
 void GenSorcMontagneFeu::GenererPersos()
 {
-    QString nom = "pas encore déterminé";
+    QString nom = "";
     DPerso* perso = new DPerso(nom, nom, nom, "");
     perso->InitialiserPerso();
     IPerso::AjouterPersoJouable(perso);
@@ -46,6 +48,7 @@ void GenSorcMontagneFeu::GenererPersos()
 
 void GenSorcMontagneFeu::GenererCaracs()
 {
+    // note : ce serait mieux de pouvoir tirer au dé pour déterminer ces valeurs
     int habilete = 6 + Aleatoire::GetAl()->D6();
     GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE, habilete, 0, habilete);
 
@@ -54,6 +57,8 @@ void GenSorcMontagneFeu::GenererCaracs()
 
     int chance = 6 + Aleatoire::GetAl()->D6();
     GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE, chance, 0, chance);
+
+    Equipement::GetEquipementDepart();
 }
 
 
@@ -457,11 +462,11 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
            "", "27");
     effet27->AjouterAjouteurACarac(LDOELH::HABILETE, 2);
     effet27->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
-    effet27->AjouterSetCaracTrue(GenSorcMontagneFeu::EPEE_MAGIQUE);
+    effet27->AjouterSetCaracTrue(Equipement::EPEE_MAGIQUE);
     AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "319");
     Choix* garderEpee = AjouterChoixGoToEffet("Si vous préférez conserver votre propre épée", "319");
     garderEpee->AjouterRetireurACarac(LDOELH::HABILETE, 2);
-    garderEpee->AjouterChangeurDeCarac(GenSorcMontagneFeu::EPEE_MAGIQUE, "");
+    garderEpee->AjouterChangeurDeCarac(Equipement::EPEE_MAGIQUE, "");
 
     //28
     Effet* effet28 = AjouterEffetNarration(
@@ -536,9 +541,39 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     effet33->m_GoToEffetId = "147";
 
     // GESTION EQUIPEMENT !!! et attention à l'épée magique plus haut...
+    // 34
+    Effet* effet34 = AjouterEffetNarration(
+                "En examinant les outils, vous trouvez un maillet en métal bien dur et "
+                "un ciseau muni d'une solide lame d'argent. Vous pouvez prendre l'un ou "
+                "l'autre de ces outils, à condition d'abandonner en échange l'une des "
+                "pièces de votre équipement. Le bruit en provenance de la "
+                "porte nord devient plus fort et vous allez voir de quoi il s'agit.",
+           "", "34");
+    // génération dynamique de choix en fonction des équipements possédés par le héros :
+    effet34->m_CallbackDisplay = [] {
+        QList<QString> equiptHeros = Equipement::GetEquipementHeros();
+        QList<QString>::iterator it_eqpts = equiptHeros.begin();
+        Effet* effetActuel = Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet();
+        for ( ;it_eqpts != equiptHeros.end();++it_eqpts )
+        {
+            QList<QString> nouvObjets = {Equipement::MAILLET_METAL, Equipement::CISEAU_LAME_ARGENT};
+            QList<QString>::iterator it_nouv_eqt = nouvObjets.begin();
+            for ( ;it_nouv_eqt != nouvObjets.end();++it_nouv_eqt )
+            {
+                QString texte = "Laisser " + *it_eqpts + " et prendre " + *it_nouv_eqt;
+                Choix* choix = new Choix(effetActuel, texte );
+                choix->AjouterSetCaracTrue(*it_nouv_eqt);
+                choix->AjouterChangeurDeCarac(*it_eqpts, "");
+                choix->m_GoToEffetId = "96";
+                effetActuel->m_Choix.push_back(choix);
+            }
+        }
+        // possibilité de ne rien prendre :
+        Choix* choix = new Choix(effetActuel, "Ne rien prendre" );
+        effetActuel->m_Choix.push_back(choix);
+        effetActuel->m_GoToEffetId = "96";
+    };
 }
-
-QString GenSorcMontagneFeu::EPEE_MAGIQUE = "Épée magique";
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
 Effet* GenSorcMontagneFeu::GenererNumeros161()

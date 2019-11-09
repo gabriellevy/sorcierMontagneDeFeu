@@ -3,5 +3,13 @@
         <file>images/couverture.PNG</file>
         <file>images/1.PNG</file>
         <file>images/11.PNG</file>
+        <file>images/equipement/Armure de cuir.jpg</file>
+        <file>images/equipement/Ciseau à lame d'argent.jpg</file>
+        <file>images/equipement/Épée.jpg</file>
+        <file>images/equipement/Lanterne.jpg</file>
+        <file>images/equipement/Maillet en métal.jpg</file>
+        <file>images/equipement/Potion d'adresse.jpg</file>
+        <file>images/equipement/Potion de bonne fortune.jpg</file>
+        <file>images/equipement/Potion de vigueur.jpg</file>
     </qresource>
 </RCC>
