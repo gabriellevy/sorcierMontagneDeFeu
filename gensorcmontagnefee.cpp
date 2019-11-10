@@ -12,7 +12,7 @@
 #include "equipement.h"
 #include "heros.h"
 
-GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire () {}
+GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire ("Le sorcier de la montagne de feu") {}
 
 GenSorcMontagneFeu* GenSorcMontagneFeu::GetGenSorcMontagneFeu()
 {
@@ -589,7 +589,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 "recouvert de vase, d'os et de végétaux en décomposition. Un vieil "
                 "homme aux cheveux ébouriffés, vêtu de haillons, se rue sur vous en "
                 "hurlant. Sa barbe est longue et grise et il brandit un vieux pied de chaise "
-                "en bois. Est-il simplement fou comme il semblerait, ou bien y a-t-il là "
+                "en bois. Est-il simplement fou co mme il semblerait, ou bien y a-t-il là "
                 "un nouveau piège ?",
            ":/images/36.PNG", "36");
     AjouterChoixGoToEffet("Vous avez le choix entre crier plus fort que lui pour essayer de le calmer", "263");
@@ -602,6 +602,19 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     AjouterChoixGoToEffet("au nord", "366");
     AjouterChoixGoToEffet("à l'ouest", "11");
     AjouterChoixGoToEffet("ou au sud", "277");
+
+    //38
+    Effet* effet38 = AjouterEffetNarration(
+                "Vous ouvrez la porte et vous trouvez le garde-manger du Loup-Garou, "
+                "un mélange d'os et de viande avariée. L'odeur est repoussante mais "
+                "vous découvrez cependant un bocal d'oeufs de caille qui semblent tout à "
+                "fait mangeables. Si vous voulez, vous pouvez les prendre, ils vous "
+                "feront deux repas supplémentaires",
+           "", "38");
+    Choix* choixRepas = AjouterChoixGoToEffet("Prendre les repas", "66");
+    choixRepas->AjouterAjouteurACarac(Equipement::REPAS, 2);
+    AjouterChoixGoToEffet("De retour dans la pièce, vous pouvez maintenant sortir par la porte sud.", "66");
+
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
