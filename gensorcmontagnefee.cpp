@@ -569,6 +569,39 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
         effetActuel->m_Choix.push_back(choix);
         //effetActuel->m_GoToEffetId = "96";
     };
+
+    //35
+    Effet* effet35 = AjouterEffetNarration(
+                "Lorsque vous entrez dans la pièce, la porte se referme derrière vous. "
+                "Vous entendez un déclic et un sifflement. Au milieu du plafond, il y a "
+                "un orifice par lequel s'échappe un jet de gaz à l'odeur âcre. Vous prenez "
+                "une inspiration et vous toussez très fort. Vous regardez la porte, puis la "
+                "clé.",
+           "", "35");
+    AjouterChoixGoToEffet("Allez-vous retourner à cette porte et prendre la fuite", "136");
+    AjouterChoixGoToEffet("ou retenir votre respiration et vous précipiter sur la clé "
+                          "pour vous en emparer", "361");
+
+    //36
+    Effet* effet36 = AjouterEffetNarration(
+                "La porte verrouillée s'ouvre à la volée et une puanteur nauséabonde "
+                "vous monte aux narines. À l'intérieur de la pièce, le plancher est "
+                "recouvert de vase, d'os et de végétaux en décomposition. Un vieil "
+                "homme aux cheveux ébouriffés, vêtu de haillons, se rue sur vous en "
+                "hurlant. Sa barbe est longue et grise et il brandit un vieux pied de chaise "
+                "en bois. Est-il simplement fou comme il semblerait, ou bien y a-t-il là "
+                "un nouveau piège ?",
+           ":/images/36.PNG", "36");
+    AjouterChoixGoToEffet("Vous avez le choix entre crier plus fort que lui pour essayer de le calmer", "263");
+    AjouterChoixGoToEffet("ou tirer votre épée et l'attaquer", "353");
+
+    //37
+    Effet* effet37 = AjouterEffetNarration(
+                "Debout au milieu du croisement, vous avez le choix entre aller",
+           "", "37");
+    AjouterChoixGoToEffet("au nord", "366");
+    AjouterChoixGoToEffet("à l'ouest", "11");
+    AjouterChoixGoToEffet("ou au sud", "277");
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
