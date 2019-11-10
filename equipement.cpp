@@ -16,7 +16,6 @@ QString Equipement::POTION_ADRESSE = "Potion d'adresse";
 QString Equipement::POTION_VIGUEUR = "Potion de vigueur";
 QString Equipement::POTION_BONNE_FORTUNE = "Potion de bonne fortune";
 QString Equipement::EPEE_MAGIQUE = "Épée magique";
-QString Equipement::REPAS = "Repas";
 
 QMap<QString, QString> Equipement::EQUIPEMENTS = {
     { Equipement::MAILLET_METAL, Equipement::MAILLET_METAL },
@@ -27,8 +26,7 @@ QMap<QString, QString> Equipement::EQUIPEMENTS = {
     { Equipement::POTION_ADRESSE, Equipement::POTION_ADRESSE },
     { Equipement::POTION_VIGUEUR, Equipement::POTION_VIGUEUR },
     { Equipement::EPEE_MAGIQUE, Equipement::EPEE_MAGIQUE + "\nHabileté +2" },
-    { Equipement::POTION_BONNE_FORTUNE, Equipement::POTION_BONNE_FORTUNE },
-    { Equipement::REPAS, Equipement::REPAS }
+    { Equipement::POTION_BONNE_FORTUNE, Equipement::POTION_BONNE_FORTUNE }
 };
 
 void Equipement::GetEquipementDepart()
@@ -55,7 +53,6 @@ void Equipement::GetEquipementDepart()
     GestionnaireCarac::SetValeurACaracId(Equipement::LANTERNE, "1");
     // note : en théorie on choisit parmi les 3 types de potion !
     GestionnaireCarac::SetValeurACaracId(Equipement::POTION_VIGUEUR, "1");
-    GestionnaireCarac::SetValeurACaracId(Equipement::REPAS, "10");
 }
 
 

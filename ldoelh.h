@@ -25,6 +25,7 @@ public:
     static QString HABILETE;
     static QString ENDURANCE;
     static QString CHANCE;
+    static QString REPAS;
     void InitialiserCaracsBase();
 };
 

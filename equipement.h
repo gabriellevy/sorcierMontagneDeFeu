@@ -20,7 +20,6 @@ public:
 
 
     // tous les types d'équipement existant :
-    static QString REPAS;
     static QString MAILLET_METAL;
     static QString CISEAU_LAME_ARGENT;
     static QString EPEE;

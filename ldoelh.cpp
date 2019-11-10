@@ -6,6 +6,7 @@
 QString LDOELH::ENDURANCE = "Endurance";
 QString LDOELH::HABILETE = "Habileté";
 QString LDOELH::CHANCE = "Chance";
+QString LDOELH::REPAS = "Repas";
 
 QString LDOELH::SORCIER_MONTAGNE_FEU = "Le sorcier de la montagne de feu";
 

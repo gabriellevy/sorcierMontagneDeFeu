@@ -58,6 +58,8 @@ void GenSorcMontagneFeu::GenererCaracs()
     int chance = 6 + Aleatoire::GetAl()->D6();
     GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE, chance, 0, chance);
 
+    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::REPAS, 10, 0, 10);
+
     Equipement::GetEquipementDepart();
 }
 
@@ -486,7 +488,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
     effet29->m_GoToEffetId = "375";
 
     //30
-    Effet* effet30 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "Une pierre se détache du roc et révèle une anfractuo-sité dans laquelle "
                 "est cachée une corde.",
            "", "30");
@@ -519,8 +521,8 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 "la pièce et à sortir par la porte qui s'ouvre dans le mur nord. Prenez 2 points de CHANCE pour prix de votre bonne "
                 "fortune.",
            "", "32");
-    effet31->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
-    effet31->m_GoToEffetId = "124";
+    effet32->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
+    effet32->m_GoToEffetId = "124";
 
     //33
     Effet* effet33 = AjouterEffetNarration(
@@ -571,7 +573,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     };
 
     //35
-    Effet* effet35 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "Lorsque vous entrez dans la pièce, la porte se referme derrière vous. "
                 "Vous entendez un déclic et un sifflement. Au milieu du plafond, il y a "
                 "un orifice par lequel s'échappe un jet de gaz à l'odeur âcre. Vous prenez "
@@ -583,7 +585,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                           "pour vous en emparer", "361");
 
     //36
-    Effet* effet36 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "La porte verrouillée s'ouvre à la volée et une puanteur nauséabonde "
                 "vous monte aux narines. À l'intérieur de la pièce, le plancher est "
                 "recouvert de vase, d'os et de végétaux en décomposition. Un vieil "
@@ -596,7 +598,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     AjouterChoixGoToEffet("ou tirer votre épée et l'attaquer", "353");
 
     //37
-    Effet* effet37 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "Debout au milieu du croisement, vous avez le choix entre aller",
            "", "37");
     AjouterChoixGoToEffet("au nord", "366");
@@ -604,7 +606,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     AjouterChoixGoToEffet("ou au sud", "277");
 
     //38
-    Effet* effet38 = AjouterEffetNarration(
+    AjouterEffetNarration(
                 "Vous ouvrez la porte et vous trouvez le garde-manger du Loup-Garou, "
                 "un mélange d'os et de viande avariée. L'odeur est repoussante mais "
                 "vous découvrez cependant un bocal d'oeufs de caille qui semblent tout à "
@@ -612,9 +614,33 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 "feront deux repas supplémentaires",
            "", "38");
     Choix* choixRepas = AjouterChoixGoToEffet("Prendre les repas", "66");
-    choixRepas->AjouterAjouteurACarac(Equipement::REPAS, 2);
+    choixRepas->AjouterAjouteurACarac(LDOELH::REPAS, 2);
     AjouterChoixGoToEffet("De retour dans la pièce, vous pouvez maintenant sortir par la porte sud.", "66");
 
+    //39
+    Effet* effet39 = AjouterEffetNarration(
+                "Votre adversaire est surpris que vous ayez disparu et, levant les mains "
+                "pour les mettre en visière au-dessus de ses yeux, il scrute la pièce d'un "
+                "regard intense. Il sent votre présence, mais ne sait pas exactement où "
+                "vous êtes. Vous tirez votre épée et vous marchez sur lui. Il penche la "
+                "tête et renifle. En le combattant, il vous faudra maintenir une certaine "
+                "distance entre lui et vous car, s'il parvient à vous saisir, votre "
+                "invisibilité ne vous sera plus d'aucun secours. Mais tant que vous restez "
+                "inaccessible, vous bénéficiez des avantages suivants : \n\n"
+                "Vous pouvez ajouter 2 points au chiffre obtenu en lançant le dé lorsque "
+                "vous déterminez votre Force d'Attaque.\n\n"
+                "Chaque assaut victorieux lui enlève 3 points d'ENDURANCE, car, "
+                "comme il ne peut pas vous voir, il lui est impossible de se défendre "
+                "efficacement.\n\n"
+                "Chaque fois qu'il vous inflige une blessure, jetez un dé. Si le chiffre "
+                "obtenu est impair, il vous a blessé normalement. Si ce chiffre est 2 ou 4, "
+                "il ne vous a infligé qu'une blessure à 1 point. Si vous faites un 6, vous "
+                "avez paré le coup et vous n'êtes pas blessé.\n\n"
+                "Menez la bataille à son terme :",
+           "", "39");
+    Combat::GetCombat()->AjouterCombat(effet39, {
+                                           new Creature("SORCIER", 11, 18, {Aveugle})} );
+    effet39->m_GoToEffetId = "396";
 }
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
@@ -666,7 +692,7 @@ Effet* GenSorcMontagneFeu::GenererNumeros161()
     }
 
     Combat::GetCombat()->AjouterCombat(effet161, {
-          new Creature(nomCreature, habileteCreature, enduranceCreature)});
+                                           new Creature(nomCreature, habileteCreature, enduranceCreature, {Aveugle})});
 
     return effet161;
 }

@@ -6,6 +6,7 @@
 #include "../destinLib/execeffet.h"
 #include "../destinLib/execlancerde.h"
 #include "../destinLib/execchoix.h"
+#include "../destinLib/aleatoire.h"
 
 Combat::Combat()
 {
@@ -100,6 +101,8 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
         int resTotal = IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::HABILETE) + resDes;
         resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
         m_ResAttaqueJoueur = resTotal;
+        if ( creature->ACetteCapacite(Aveugle) )
+            m_ResAttaqueJoueur += 2;
 
         // au tour du monstre :
         m_PhaseCombat = PhaseCombat::AttaqueEnnemi;
@@ -113,6 +116,10 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
         if (m_ResAttaqueJoueur > m_ResAttaqueEnnemi) {
             // le joueur a l'avantage :
             creature->m_Endurance -= 2;
+
+            if ( creature->ACetteCapacite(Aveugle) )
+                creature->m_Endurance -= 1;// blessure supplémentaire
+
             if ( creature->m_Endurance <= 0) {
                 // l'ennemi est mort :
                 resTxt += "\nL'ennemi est mort. Victoire ! ";
@@ -137,20 +144,37 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
         else if (m_ResAttaqueJoueur < resEnnemi)
         {
             // le monstre a l'avantage :
-            int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 2);
-            m_NbBlessuresRecues++;
-            if ( m_NbBlessuresRecues%3 == 0 && creature->ACetteCapacite(SuceurHabilete)) {
-                GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
+            int endurancePerdue = 2;
+
+            // possibilité de réduire les blessure :
+            if ( creature->ACetteCapacite(Aveugle) ) {
+                int resDe = Aleatoire::GetAl()->D6();
+                switch (resDe) {
+                case 2 :case 4 : endurancePerdue = 1; break;
+                case 6 : endurancePerdue = 0; break;
+                }
             }
-            if ( endurance <= 0) {
-                // perdu... :
-                resTxt += "\nVous êtes mort.";
-                combatContinue = false;
-                Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
-            } else {
-                // joueur blessé :
-                resTxt += "\nVous êtes blessé.";
-                resTxt += "\n\n" + GetIntituleCombat();
+
+            if ( endurancePerdue == 0 ) {
+                resTxt += "\nVous avez réussi à esquiver l'attaque.";
+            }
+            else
+            {
+                int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, endurancePerdue);
+                m_NbBlessuresRecues++;
+                if ( m_NbBlessuresRecues%3 == 0 && creature->ACetteCapacite(SuceurHabilete)) {
+                    GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
+                }
+                if ( endurance <= 0) {
+                    // perdu... :
+                    resTxt += "\nVous êtes mort.";
+                    combatContinue = false;
+                    Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "mort";
+                } else {
+                    // joueur blessé :
+                    resTxt += "\nVous êtes blessé.";
+                    resTxt += "\n\n" + GetIntituleCombat();
+                }
             }
         } else {
             // égalité
