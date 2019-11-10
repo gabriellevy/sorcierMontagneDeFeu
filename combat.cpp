@@ -98,14 +98,15 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
 
     if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
         // le joueur attaque (lance les dés)
-        int resTotal = IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::HABILETE) + resDes;
-        resTxt  = "Votre force d'attaque : "  + QString::number(resTotal);
-        m_ResAttaqueJoueur = resTotal;
+        m_ResAttaqueJoueur = IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::HABILETE) + resDes;
         if ( creature->ACetteCapacite(Aveugle) )
             m_ResAttaqueJoueur += 2;
+        resTxt  = "Votre force d'attaque : "  + QString::number(m_ResAttaqueJoueur);
 
         // au tour du monstre :
         m_PhaseCombat = PhaseCombat::AttaqueEnnemi;
+        Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->ChangerIntituleBouton("Au tour de la créature");
+
     } else {
         // le monstre attaque et on résoud le duel
         int resEnnemi = GetEnnemiActuel()->m_Habilete + resDes;
@@ -155,7 +156,8 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
                 }
             }
 
-            if ( endurancePerdue == 0 ) {
+            if ( endurancePerdue == 0 )
+            {
                 resTxt += "\nVous avez réussi à esquiver l'attaque.";
             }
             else
@@ -185,6 +187,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
         // au tour du joueur
         m_PhaseCombat = PhaseCombat::AttaqueJoueur;
         IPerso::GetPersoInterface()->RafraichirAffichage();
+        Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->ChangerIntituleBouton("Attaquez");
     }
 
     return combatContinue;

@@ -56,7 +56,7 @@ void Equipement::GetEquipementDepart()
 }
 
 
-QList<QString> Equipement::GetEquipementHeros()
+QList<QString> Equipement::GetEquipementsHeros()
 {
     QList<QString> equiptActuelHeros = {};
     QMap<QString, QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
@@ -73,14 +73,6 @@ QList<QString> Equipement::GetEquipementHeros()
 
 bool Equipement::HerosACetEquipement(QString equipementId)
 {
-    QMap<QString, QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
-    QMap<QString, QString>::iterator it_eqpts_end = Equipement::EQUIPEMENTS.end();
-
-    for ( ;it_eqpts != it_eqpts_end;++it_eqpts )
-    {
-        if ( (it_eqpts.key()) == equipementId )
-            return true;
-    }
-
-    return false;
+    QList<QString> eqptsHeros = GetEquipementsHeros();
+    return (eqptsHeros.indexOf(equipementId) != -1);
 }

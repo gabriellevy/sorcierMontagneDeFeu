@@ -15,7 +15,7 @@ public:
 
     // affecte l'équipement dé départ au personnage et l'affiche
     static void GetEquipementDepart();
-    static QList<QString> GetEquipementHeros();
+    static QList<QString> GetEquipementsHeros();
     static bool HerosACetEquipement(QString equipementId);
 
 

@@ -549,7 +549,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
            "", "34");
     // génération dynamique de choix en fonction des équipements possédés par le héros :
     effet34->m_CallbackDisplay = [] {
-        QList<QString> equiptHeros = Equipement::GetEquipementHeros();
+        QList<QString> equiptHeros = Equipement::GetEquipementsHeros();
         QList<QString>::iterator it_eqpts = equiptHeros.begin();
         Effet* effetActuel = Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet();
         for ( ;it_eqpts != equiptHeros.end();++it_eqpts )
@@ -638,8 +638,9 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 "avez paré le coup et vous n'êtes pas blessé.\n\n"
                 "Menez la bataille à son terme :",
            "", "39");
-    Combat::GetCombat()->AjouterCombat(effet39, {
-                                           new Creature("SORCIER", 11, 18, {Aveugle})} );
+    Combat::GetCombat()->AjouterCombat(
+                effet39,
+                {new Creature("SORCIER", 11, 18, {Aveugle})} );
     effet39->m_GoToEffetId = "396";
 }
 
