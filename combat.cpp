@@ -99,6 +99,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
     if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
         // le joueur attaque (lance les dés)
         m_ResAttaqueJoueur = IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::HABILETE) + resDes;
+
         if ( creature->ACetteCapacite(Aveugle) )
             m_ResAttaqueJoueur += 2;
         resTxt  = "Votre force d'attaque : "  + QString::number(m_ResAttaqueJoueur);
@@ -114,14 +115,20 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
         m_ResAttaqueEnnemi = resEnnemi;
 
         // conclusion de la phase de combat :
-        if (m_ResAttaqueJoueur > m_ResAttaqueEnnemi) {
+        if (m_ResAttaqueJoueur > m_ResAttaqueEnnemi ) {
             // le joueur a l'avantage :
             creature->m_Endurance -= 2;
 
             if ( creature->ACetteCapacite(Aveugle) )
                 creature->m_Endurance -= 1;// blessure supplémentaire
 
-            if ( creature->m_Endurance <= 0) {
+            if (  creature->ACetteCapacite(GoToAuPremierSang)) {
+                resTxt += "\nL'ennemi est blessé.";
+                combatContinue = false;
+                Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->ChangerIntituleBouton("Cliquez pour voir ce qui se passe");
+                FinirCombat();
+            }
+            else if ( creature->m_Endurance <= 0) {
                 // l'ennemi est mort :
                 resTxt += "\nL'ennemi est mort. Victoire ! ";
 

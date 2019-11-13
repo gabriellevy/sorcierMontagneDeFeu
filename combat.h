@@ -6,7 +6,7 @@
 
 enum CapaciteCreature {
     SuceurHabilete, // retire un point d'habileté au joueur chaque fois qu'il le blesse 3 fois
-    Aveugle // la créature est aveuglée :
+    Aveugle, // la créature est aveuglée :
     /*
      * Vous pouvez ajouter 2 points au chiffre obtenu en lançant le dé lorsque
         vous déterminez votre Force d'Attaque.
@@ -17,6 +17,9 @@ enum CapaciteCreature {
         obtenu est impair, il vous a blessé normalement. Si ce chiffre est 2 ou 4,
         il ne vous a infligé qu'une blessure à 1 point. Si vous faites un 6, vous
         avez paré le coup et vous n'êtes pas blessé.*/
+    GoToAuPremierSang /* utilisé pour les ennemis qui nous emmènent à un autre numéro
+        dès qu'on les touche (le combat est alors considéré comme temporaireemnt 'fini'
+        quitte à recommencer au numéro en question*/
 };
 
 struct Creature {

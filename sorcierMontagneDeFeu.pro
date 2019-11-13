@@ -59,7 +59,8 @@ SOURCES += \
     gensorcmontagnefee.cpp \
     heros.cpp \
         main.cpp \
-        ldoelh.cpp
+        ldoelh.cpp \
+    numeros1-50.cpp
 
 HEADERS += \
     ../destinLib/execlancerde.h \
