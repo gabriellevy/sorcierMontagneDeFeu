@@ -597,7 +597,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
                 "qui s'élève des murs et vous comprenez que le Sorcier est en train de se "
                 "moquer de vous. Vous décidez de quitter la pièce par la porte sud.",
                 "", "45");
-    effet44->m_GoToEffetId = "90";
+    effet45->m_GoToEffetId = "90";
 
     //46
     AjouterEffetNarration(
@@ -607,4 +607,48 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
            "", "46");
     AjouterChoixGoToEffet("Pour suivre ce tournant", "4");
     AjouterChoixGoToEffet("Si vous choisissez de passer la porte", "206");
+
+    //47
+    Effet* effet47 = AjouterEffetNarration(
+                "Lorsque vous êtes au milieu de la rivière, le pont se met à se balancer "
+                "sous votre poids. La rambarde se dérobe brusquement au moment où "
+                "vous vous appuyez dessus. Lancez un dé. ",
+                "", "47");
+    m_GenerateurEvt->AjouterLancerDe("Un 6 vous précipite dans la rivière. De 1 à 5, vous retrouvez votre équilibre.",
+                                     1,
+                                     [](int res) {
+        QString resTxt = "";
+        if ( res == 6 )
+        {
+            resTxt = "vous tombez dans la rivière";
+            Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "158";
+        }
+        else
+        {
+            resTxt = "vous retrouvez votre équilibre";
+            Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "298";
+        }
+
+        return new ResExecutionLancerDe(resTxt, false);
+
+    });
+
+    //48
+    AjouterEffetNarration(
+                "Vous vous trouvez dans un couloir est-ouest. Si vous allez à l'est vous "
+                "arriverez à un tournant s'orientant vers le nord.",
+           "", "48");
+    AjouterChoixGoToEffet("Si vous choisissez cette direction", "391");
+    AjouterChoixGoToEffet("Pour aller à l'ouest", "60");
+
+    //49
+    Effet* effet49 = AjouterEffetNarration(
+                "La porte grince en s'ouvrant sur ses gonds rouillés. La pièce est sombre "
+                "et vos yeux s'habituent à l'obscurité tandis que vous refermez la porte "
+                "derrière vous. Vous entendez un bruissement de pas, mais avant que "
+                "vous ayez pu réagir, vous recevez sur la tête un coup qui vous "
+                "assomme. Vous perdez 2 points d'ENDURANCE",
+                "", "49");
+    effet49->AjouterRetireurACarac(LDOELH::ENDURANCE, 2);
+    effet49->m_GoToEffetId = "122";
 }
