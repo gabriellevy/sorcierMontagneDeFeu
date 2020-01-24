@@ -19,6 +19,7 @@ public:
 
     Combat* m_GestCombat = nullptr;
 
+    // noms d'aventures
     static QString SORCIER_MONTAGNE_FEU;
 
     // caractérisiques principales (au sens jdr)

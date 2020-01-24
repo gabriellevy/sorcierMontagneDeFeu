@@ -1,6 +1,7 @@
 #include "equipement.h"
 #include "../destinLib/gestionnairecarac.h"
 #include "../destinLib/carac.h"
+#include "heros.h"
 
 Equipement::Equipement(QString id):m_Id(id)
 {
@@ -47,12 +48,13 @@ void Equipement::GetEquipementDepart()
                     );
 
     }
+    Heros* heros = Heros::GetHerosJoue();
 
-    GestionnaireCarac::SetValeurACaracId(Equipement::EPEE, "1");
-    GestionnaireCarac::SetValeurACaracId(Equipement::ARMURE_CUIR, "1");
-    GestionnaireCarac::SetValeurACaracId(Equipement::LANTERNE, "1");
+    heros->SetValeurACaracId(Equipement::EPEE, "1");
+    heros->SetValeurACaracId(Equipement::ARMURE_CUIR, "1");
+    heros->SetValeurACaracId(Equipement::LANTERNE, "1");
     // note : en théorie on choisit parmi les 3 types de potion !
-    GestionnaireCarac::SetValeurACaracId(Equipement::POTION_VIGUEUR, "1");
+    heros->SetValeurACaracId(Equipement::POTION_VIGUEUR, "1");
 }
 
 
@@ -62,9 +64,11 @@ QList<QString> Equipement::GetEquipementsHeros()
     QMap<QString, QString>::iterator it_eqpts = Equipement::EQUIPEMENTS.begin();
     QMap<QString, QString>::iterator it_eqpts_end = Equipement::EQUIPEMENTS.end();
 
+    Heros* heros = Heros::GetHerosJoue();
+
     for ( ;it_eqpts != it_eqpts_end;++it_eqpts )
     {
-        if ( GestionnaireCarac::IsCaracTrue(it_eqpts.key()) )
+        if ( heros->IsCaracTrue(it_eqpts.key()) )
             equiptActuelHeros.push_back(it_eqpts.key());
     }
 

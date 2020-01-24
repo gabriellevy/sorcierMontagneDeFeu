@@ -9,6 +9,8 @@ public:
 
     virtual QString GetValeurCarac(QString id);
     virtual int GetValeurCaracAsInt(QString id);
+
+    static Heros* GetHerosJoue();
 };
 
 #endif // HEROS_H

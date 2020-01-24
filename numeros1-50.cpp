@@ -5,6 +5,7 @@
 #include "../destinLib/gestionnairecarac.h"
 #include "../destinLib/execeffet.h"
 #include "../destinLib/lancerde.h"
+#include "heros.h"
 
 void GenSorcMontagneFeu::GenererNumeros1_10()
 {
@@ -230,7 +231,8 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                        "d'ENDURANCE.", "348", "vous êtes chanceux, vous "
                        "avez réussi à faire un bond en arrière avant qu'un trou ne se forme.", "261",
                        [] {
-        GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, 1);
+        Heros* heros = Heros::GetHerosJoue();
+        heros->RetirerValeurACaracId(LDOELH::ENDURANCE, 1);
     });
 
     //19
@@ -298,7 +300,8 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
            "", "24");
     // édition du combat actuel en fonction des nouvelles infos :
     effet24->m_CallbackDisplay = [] {
-        GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
+        Heros* heros = Heros::GetHerosJoue();
+        heros->RetirerValeurACaracId(LDOELH::HABILETE, 1);
         Combat* combatActuel = Combat::GetCombat();
         combatActuel->AjouterCaracAMonstre(SuceurHabilete);
         combatActuel->AjouterFuiteAuCombat("Si vous choisissez de vous enfuir, échappez vous par "
@@ -609,7 +612,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     AjouterChoixGoToEffet("Si vous choisissez de passer la porte", "206");
 
     //47
-    Effet* effet47 = AjouterEffetNarration(
+    /*Effet* effet47 = */AjouterEffetNarration(
                 "Lorsque vous êtes au milieu de la rivière, le pont se met à se balancer "
                 "sous votre poids. La rambarde se dérobe brusquement au moment où "
                 "vous vous appuyez dessus. Lancez un dé. ",

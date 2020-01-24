@@ -2,9 +2,7 @@
 #include "equipement.h"
 
 Heros::Heros():DPerso("Reynault", "Reynault", "Reynault", "")
-{
-
-}
+{}
 
 
 QString Heros::GetValeurCarac(QString id)
@@ -21,4 +19,9 @@ int Heros::GetValeurCaracAsInt(QString id)
         val += 2;
 
     return val;
+}
+
+Heros* Heros::GetHerosJoue()
+{
+    return static_cast<Heros*>(DPerso::GetDPersoJoue());
 }

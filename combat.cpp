@@ -7,6 +7,7 @@
 #include "../destinLib/execlancerde.h"
 #include "../destinLib/execchoix.h"
 #include "../destinLib/aleatoire.h"
+#include "heros.h"
 
 Combat::Combat()
 {
@@ -95,6 +96,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
 {
     bool combatContinue = true;
     Creature* creature = GetEnnemiActuel();
+    Heros* heros = Heros::GetHerosJoue();
 
     if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
         // le joueur attaque (lance les dés)
@@ -169,10 +171,10 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
             }
             else
             {
-                int endurance = GestionnaireCarac::RetirerValeurACaracId(LDOELH::ENDURANCE, endurancePerdue);
+                int endurance = heros->RetirerValeurACaracId(LDOELH::ENDURANCE, endurancePerdue);
                 m_NbBlessuresRecues++;
                 if ( m_NbBlessuresRecues%3 == 0 && creature->ACetteCapacite(SuceurHabilete)) {
-                    GestionnaireCarac::RetirerValeurACaracId(LDOELH::HABILETE, 1);
+                    heros->RetirerValeurACaracId(LDOELH::HABILETE, 1);
                 }
                 if ( endurance <= 0) {
                     // perdu... :

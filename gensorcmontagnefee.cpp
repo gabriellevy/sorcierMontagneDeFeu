@@ -72,10 +72,11 @@ void GenSorcMontagneFeu::GenererCaracs()
 
 bool TenterLaChance(int resDe)
 {
+    Heros* heros = Heros::GetHerosJoue();
     QString resTxt = "Résultat des dés : " + QString::number(resDe) + "\n\n";
     qDebug() << resTxt;
 
-    GestionnaireCarac::AJouterValeurACaracId(LDOELH::CHANCE, -1);
+    heros->AJouterValeurACaracId(LDOELH::CHANCE, -1);
     IPerso::GetPersoInterface()->RafraichirAffichage();
 
     return ( resDe < IPerso::GetPersoCourant()->GetValeurCaracAsInt(LDOELH::CHANCE));
