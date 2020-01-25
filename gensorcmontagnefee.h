@@ -1,7 +1,7 @@
 #ifndef GENSORCMONTAGNEFEE_H
 #define GENSORCMONTAGNEFEE_H
 
-#include "../destinLib/genhistoire.h"
+#include "../destinLib/gen/genhistoire.h"
 
 class LDOELH;
 class Combat;

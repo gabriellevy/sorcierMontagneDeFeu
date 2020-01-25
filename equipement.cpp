@@ -1,6 +1,6 @@
 #include "equipement.h"
 #include "../destinLib/gestionnairecarac.h"
-#include "../destinLib/carac.h"
+#include "../destinLib/abs/carac.h"
 #include "heros.h"
 
 Equipement::Equipement(QString id):m_Id(id)

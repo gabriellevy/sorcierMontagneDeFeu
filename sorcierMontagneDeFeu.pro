@@ -25,88 +25,40 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 CONFIG += resources_big
 
+include(../destinLib/abs/abs.pri)
+include(../destinLib/gen/gen.pri)
+include(../destinLib/exec/exec.pri)
+
 SOURCES += \
-    ../destinLib/execlancerde.cpp \
-    ../destinLib/lancerde.cpp \
-    ../destinLib/selectionneurdenoeud.cpp \
-    ../destinLib/univers.cpp \
-    ../destinLib/histoire.cpp \
-    ../destinLib/carac.cpp \
-    ../destinLib/condition.cpp \
-    ../destinLib/noeud.cpp \
-    ../destinLib/noeudnarratif.cpp \
-    ../destinLib/effet.cpp \
-    ../destinLib/choix.cpp \
-    ../destinLib/evt.cpp \
-    ../destinLib/genevt.cpp \
-    ../destinLib/execevt.cpp \
-    ../destinLib/glisseur.cpp \
-    ../destinLib/exechistoire.cpp \
-    ../destinLib/execeffet.cpp \
-    ../destinLib/execchoix.cpp \
-    ../destinLib/execnoeud.cpp \
-    ../destinLib/genhistoire.cpp \
-    ../destinLib/perso.cpp \
-    ../destinLib/setcarac.cpp \
-    ../destinLib/evtaleatoire.cpp \
-    ../destinLib/reglages.cpp \
-    ../destinLib/dbmanager.cpp \
     ../destinLib/gestionnairecarac.cpp \
+    ../destinLib/aspectratiolabel.cpp \
+    ../destinLib/dbmanager.cpp \
+    ../destinLib/glisseur.cpp \
+    ../destinLib/reglages.cpp \
     ../destinLib/aleatoire.cpp \
-    aspectratiolabel.cpp \
     combat.cpp \
     equipement.cpp \
     gensorcmontagnefee.cpp \
     heros.cpp \
-        main.cpp \
-        ldoelh.cpp \
+    main.cpp \
+    ldoelh.cpp \
     numeros1-50.cpp
 
 HEADERS += \
-    ../destinLib/execlancerde.h \
-    ../destinLib/lancerde.h \
-    ../destinLib/selectionneurdenoeud.h \
-    ../destinLib/univers.h \
-    ../destinLib/histoire.h \
-    ../destinLib/carac.h \
-    ../destinLib/condition.h \
-    ../destinLib/noeud.h \
-    ../destinLib/noeudnarratif.h \
-    ../destinLib/effet.h \
-    ../destinLib/choix.h \
-    ../destinLib/evt.h \
-    ../destinLib/genevt.h \
-    ../destinLib/execevt.h \
-    ../destinLib/glisseur.h \
-    ../destinLib/exechistoire.h \
-    ../destinLib/execeffet.h \
-    ../destinLib/execchoix.h \
-    ../destinLib/execnoeud.h \
-    ../destinLib/genhistoire.h \
-    ../destinLib/perso.h \
-    ../destinLib/setcarac.h \
-    ../destinLib/evtaleatoire.h \
-    ../destinLib/reglages.h \
-    ../destinLib/dbmanager.h \
     ../destinLib/gestionnairecarac.h \
+    ../destinLib/aspectratiolabel.h \
+    ../destinLib/dbmanager.h \
+    ../destinLib/glisseur.h \
+    ../destinLib/reglages.h \
     ../destinLib/aleatoire.h \
-    aspectratiolabel.h \
     combat.h \
     equipement.h \
     gensorcmontagnefee.h \
     heros.h \
-        ldoelh.h
+    ldoelh.h
 
 FORMS += \
-    ../destinLib/univers.ui \
-    ../destinLib/carac.ui \
-    ../destinLib/choix.ui \
-    ../destinLib/effet.ui \
-    ../destinLib/evt.ui \
-    ../destinLib/histoire.ui \
-    ../destinLib/noeud.ui \
-    ../destinLib/lancerde.ui \
-    ../destinLib/perso.ui
+    ldoelh.ui
 
 CONFIG += mobility
 MOBILITY = 

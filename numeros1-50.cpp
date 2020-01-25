@@ -3,8 +3,8 @@
 #include "combat.h"
 #include "equipement.h"
 #include "../destinLib/gestionnairecarac.h"
-#include "../destinLib/execeffet.h"
-#include "../destinLib/lancerde.h"
+#include "../destinLib/exec/execeffet.h"
+#include "../destinLib/abs/lancerde.h"
 #include "heros.h"
 
 void GenSorcMontagneFeu::GenererNumeros1_10()

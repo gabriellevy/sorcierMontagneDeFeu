@@ -1,7 +1,7 @@
 #ifndef LDOELH_H
 #define LDOELH_H
 
-#include "../destinLib/univers.h"
+#include "../destinLib/abs/univers.h"
 #include <QMainWindow>
 
 class Combat;
