@@ -654,4 +654,17 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
                 "", "49");
     effet49->AjouterRetireurACarac(LDOELH::ENDURANCE, 2);
     effet49->m_GoToEffetId = "122";
+
+    // 50
+    Effet* effet50 = AjouterEffetNarration(
+                "La créature que vous avez tuée s'écroule sur le sol. Vous fouillez ses "
+                "vêtements sans rien trouver, mais un petit sac pend à son cou. A "
+                "l'intérieur du sac se trouve une petite clé de bronze gravée du chiffre 9. "
+                "Vous pouvez la prendre si vous le désirez. Il n'y a rien d'autre "
+                "d'intéressant dans la caverne, et vous sortez en retournant à la "
+                "bifurcation.",
+                "", "50");
+    Choix* choixCle = AjouterChoixGoToEffet("Prendre la clef", "269");
+    choixCle->AjouterSetCaracTrue(Equipement::CLEF_BRONZE9);
+    AjouterChoixGoToEffet("Ne pas prendre la clé", "269");
 }

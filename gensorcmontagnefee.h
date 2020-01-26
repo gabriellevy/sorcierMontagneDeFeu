@@ -30,6 +30,7 @@ private:
     void GenererNumeros21_30();
     void GenererNumeros31_40();
     void GenererNumeros41_50();
+    void GenererNumeros51_60();
 
     // numéro spécial qui peut être appelé de plusieurs endroits différents et a un effet généré pour chacun de ces cas
     // c'est donc un numéro qui existe en plusieurs exemplaires

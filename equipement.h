@@ -29,6 +29,7 @@ public:
     static QString POTION_VIGUEUR;
     static QString POTION_BONNE_FORTUNE;
     static QString EPEE_MAGIQUE;// + 2 en habileté
+    static QString CLEF_BRONZE9;// clef de bronze gravée du chiffre 9
 
     // liste de tous els équipements disponibles dans le jeu et de leur description
     // (permet de déterminer ce qui est un équipement dans la liste des caracs)

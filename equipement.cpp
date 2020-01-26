@@ -17,6 +17,7 @@ QString Equipement::POTION_ADRESSE = "Potion d'adresse";
 QString Equipement::POTION_VIGUEUR = "Potion de vigueur";
 QString Equipement::POTION_BONNE_FORTUNE = "Potion de bonne fortune";
 QString Equipement::EPEE_MAGIQUE = "Épée magique";
+QString Equipement::CLEF_BRONZE9 = "Clef de bronze gravée du chiffre 9";
 
 QMap<QString, QString> Equipement::EQUIPEMENTS = {
     { Equipement::MAILLET_METAL, Equipement::MAILLET_METAL },
@@ -27,7 +28,8 @@ QMap<QString, QString> Equipement::EQUIPEMENTS = {
     { Equipement::POTION_ADRESSE, Equipement::POTION_ADRESSE },
     { Equipement::POTION_VIGUEUR, Equipement::POTION_VIGUEUR },
     { Equipement::EPEE_MAGIQUE, Equipement::EPEE_MAGIQUE + "\nHabileté +2" },
-    { Equipement::POTION_BONNE_FORTUNE, Equipement::POTION_BONNE_FORTUNE }
+    { Equipement::POTION_BONNE_FORTUNE, Equipement::POTION_BONNE_FORTUNE },
+    { Equipement::CLEF_BRONZE9, Equipement::CLEF_BRONZE9 }
 };
 
 void Equipement::GetEquipementDepart()

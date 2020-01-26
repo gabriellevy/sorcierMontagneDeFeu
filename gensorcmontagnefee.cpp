@@ -36,6 +36,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
     GenererNumeros21_30();
     GenererNumeros31_40();
     GenererNumeros41_50();
+    GenererNumeros51_60();
     GenererEffetsGeneriques();
 
     FinGenerationHistoire();

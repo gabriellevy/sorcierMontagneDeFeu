@@ -42,7 +42,8 @@ SOURCES += \
     heros.cpp \
     main.cpp \
     ldoelh.cpp \
-    numeros1-50.cpp
+    numeros1-50.cpp \
+    numeros51-100.cpp
 
 HEADERS += \
     ../destinLib/gestionnairecarac.h \
