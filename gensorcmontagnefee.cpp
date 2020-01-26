@@ -114,10 +114,10 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
 
 
 int GenSorcMontagneFeu::Num161_COUNTER = 0;
-Effet* GenSorcMontagneFeu::GenererNumeros161()
+shared_ptr<Effet> GenSorcMontagneFeu::GenererNumeros161()
 {
     QString id = "161_" + QString::number(GenSorcMontagneFeu::Num161_COUNTER++);
-    Effet* effet161 = AjouterEffetNarration(
+    shared_ptr<Effet> effet161 = AjouterEffetNarration(
                 "En cherchant des portes et des passages secrets, vous avez sondé, martelé, "
                 "raclé la paroi rocheuse, et tous ces bruits ont résonné dans les couloirs "
                 "de la montagne. Diverses créatures vagabondent librement dans les "

@@ -74,18 +74,18 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
     AjouterChoixGoToEffet(" ou continuerezvous vers le nord", "292");
 
     // 6
-    Effet* effet6 = AjouterEffetNarration("La haute porte n'a pas de poignée. Vous essayez de l'enfoncer, mais sans résultat. La porte ne bougera pas. 3"
+    shared_ptr<Effet> effet6 = AjouterEffetNarration("La haute porte n'a pas de poignée. Vous essayez de l'enfoncer, mais sans résultat. La porte ne bougera pas. 3"
                           "Vous décidez d'abandonner et vous repassez par l'ouverture du couloir est-ouest à quelque distance en arrière. ",
                           "", "6");
     effet6->m_GoToEffetId = "89";
 
     //7
-    Effet* effet7 = AjouterEffetNarration("Vous êtes sur la berge nord d'une rivière au fort courant, dans une grande caverne souterraine. ",
+    shared_ptr<Effet> effet7 = AjouterEffetNarration("Vous êtes sur la berge nord d'une rivière au fort courant, dans une grande caverne souterraine. ",
                           "", "7");
     effet7->m_GoToEffetId = "214";
 
     //8
-    Effet* effet8 = AjouterEffetNarration(
+    shared_ptr<Effet> effet8 = AjouterEffetNarration(
                 "Le passage devant vous aboutit à une porte solide. Vous essayez d'écouter, mais vous n'entendez rien. "
                 "Vous tournez alors la poignée, la porte s'ouvre et vous entrez dans dans la pièce. Tandis que vous y jetez un coup d'oeil, "
                 "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
@@ -106,7 +106,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
     AjouterChoixGoToEffet("Si vous fouillez les tiroirs", "322");
 
     //10
-    /*Effet* effet10 = */AjouterEffetNarration("Vous êtes revenu à la bifurcation et vous prenez la direction du nord. ",
+    /*shared_ptr<Effet> effet10 = */AjouterEffetNarration("Vous êtes revenu à la bifurcation et vous prenez la direction du nord. ",
                           "", "10");
     effet7->m_GoToEffetId = "77";
 }
@@ -114,7 +114,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
 void GenSorcMontagneFeu::GenererNumeros11_20()
 {
     //11
-    Effet* effet11 = AjouterEffetNarration("Vous suivez le passage vers l'ouest jusqu'à ce qu'il tourne vers le sud. "
+    shared_ptr<Effet> effet11 = AjouterEffetNarration("Vous suivez le passage vers l'ouest jusqu'à ce qu'il tourne vers le sud. "
                           "Juste avant ce coude, il y a une pancarte qui indique : « En "
                           "construction. » Devant vous, les premières marches d'un escalier qui "
                           "descend. Trois marches, seulement ont été construites. Sur le sol sont "
@@ -136,18 +136,18 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     AjouterChoixGoToEffet("ou au sud", "250");
 
     //12
-    /*Effet* effet12 = */AjouterEffetNarration(
+    /*shared_ptr<Effet> effet12 = */AjouterEffetNarration(
                 "Au moment où vous tirez la poignée, un bruit métallique assourdissant "
                 "retentit dans le passage. Vous la repoussez frénétiquement pour arrêter "
                 "le signal d'alarme, mais il a déjà produit son effet. Vous entendez des "
                 "bruits de pas qui s'approchent dans le couloir.",
            "", "12");
-    Effet* effet161_12 = GenererNumeros161();
+    shared_ptr<Effet> effet161_12 = GenererNumeros161();
     AjouterChoixGoToEffet("vous pouvez soit retourner à la bifurcation", "256", "", effet161_12);
     AjouterChoixGoToEffet("soit pousser la poignée", "364", "", effet161_12);
 
     //13
-    Effet* effet13 = AjouterEffetNarration(
+    shared_ptr<Effet> effet13 = AjouterEffetNarration(
                 "Votre tête vous fait mal et vous vous sentez tout étourdi en vous "
                 "relevant. Les quatre hommes se met-tent en mouvement et s'avancent "
                 "vers vous en file indienne, leurs armes prêtes. Vous cherchez votre "
@@ -159,15 +159,15 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet13->m_GoToEffetId = "282";
 
     //14
-    /*Effet* effet14 = */AjouterEffetNarration(
+    /*shared_ptr<Effet> effet14 = */AjouterEffetNarration(
                 "Il n'y a pas trace de passage secret ; en revanche, vous entendez des "
                 "bruits de pas qui viennent vers vous.",
            "", "14");
-    Effet* effet161_14 = GenererNumeros161();
+    shared_ptr<Effet> effet161_14 = GenererNumeros161();
     effet161_14->m_GoToEffetId = "117";
 
     //15
-    Effet* effet15 = AjouterEffetNarration(
+    shared_ptr<Effet> effet15 = AjouterEffetNarration(
                 "Tandis que vous êtes assis sur le banc en train de manger, vous vous "
                 "détendez profondément et les courbatures de votre corps semblent """
                 "disparaître d'elles-mêmes. Ce lieu de repos est enchanté. Vous avez "
@@ -182,7 +182,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet15->m_GoToEffetId = "367";
 
     //16
-    Effet* effet16 = AjouterEffetNarration(
+    shared_ptr<Effet> effet16 = AjouterEffetNarration(
                 "Vous tirez votre épée du fourreau; l'Ogre vous a entendu et se prépare à "
                 "l'attaque",
            "", "16");
@@ -191,7 +191,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet16->m_GoToEffetId = "50";
 
     //17
-    /*Effet* effet17 = */AjouterEffetNarration(
+    /*shared_ptr<Effet> effet17 = */AjouterEffetNarration(
                 "A l'aide de l'épieu et du maillet (ou d'un maillet de fortune si vous n'en "
                 "avez pas), vous formez une croix et vous avancez vers le Vampire en "
                 "l'acculant dans un coin. Le Vampire siffle et essaye de vous attraper, "
@@ -206,7 +206,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                        "trésor", "327");
 
     //17_b
-    Effet* effet17_b = AjouterEffetNarration(
+    shared_ptr<Effet> effet17_b = AjouterEffetNarration(
                 "le Vampire est simplement écorché par le coup (enlevezlui "
                                        "3 points d'ENDURANCE) et il vous rejette en arrière vers la porte "
                                        "située à l'ouest.",
@@ -236,7 +236,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     });
 
     //19
-    Effet* effet19 = AjouterEffetNarration(
+    shared_ptr<Effet> effet19 = AjouterEffetNarration(
                 "Ces deux créatures malfaisantes sont des LUTINS. Ils vous attaquent "
                 "un par un.",
                 "", "19");
@@ -244,7 +244,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
     effet19->m_GoToEffetId = "317";
 
     //19
-    Effet* effet20 = AjouterEffetNarration(
+    shared_ptr<Effet> effet20 = AjouterEffetNarration(
                 "La bagarre commence. Vous avez votre épée, ils ont leurs haches. Ils "
                 "vous affrontent un par un.",
                 "", "20");
@@ -271,7 +271,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
     AjouterChoixGoToEffet("Vous pouvez essayer de briser la serrure à l'aide de votre épée", "339");
     AjouterChoixGoToEffet("ou le laisser et sortir par la porte ouverte", "293");
     //22
-    Effet* effet22 = AjouterEffetNarration(
+    shared_ptr<Effet> effet22 = AjouterEffetNarration(
                 "Vous furetez un peu partout à la recherche d'une trace de porte secrète, "
                 "mais vous n'en trouvez pas. Tandis que vous faites une pause pour "
                 "réfléchir à la situation, un mince jet de gaz s'échappe du plafond en "
@@ -291,7 +291,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
     AjouterChoixGoToEffet("ou retourner à la bifurcation", "229");
 
     //24
-    Effet* effet24 = AjouterEffetNarration(
+    shared_ptr<Effet> effet24 = AjouterEffetNarration(
                 "Après avoir subi votre troisième blessure, vous remarquez que votre "
                 "force décline. Vous perdez 1 point d'HABILETÉ. Vous en déduisez "
                 "qu'il s'agit, là encore, d'un pouvoir magique de la repoussante créature "
@@ -310,7 +310,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
         Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "135";
     };
     //25
-    Effet* effet25 = AjouterEffetNarration(
+    shared_ptr<Effet> effet25 = AjouterEffetNarration(
                 "Les peintures sont des portraits d'hommes. Un frisson vous parcourt "
                 "l'échiné lorsque vous lisez sur une plaque le nom de celui qui se trouve "
                 "sur le mur ouest - il s'agit de Zagor, le Sorcier dont vous cherchez le "
@@ -322,7 +322,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
                 "d'essayer de combattre le Sorcier ? ",
            "", "25");
     effet25->AjouterRetireurACarac(LDOELH::HABILETE, 1);
-    Choix* fuite = AjouterChoixGoToEffet("Vous pouvez soit sortir tout droit "
+    shared_ptr<Choix> fuite = AjouterChoixGoToEffet("Vous pouvez soit sortir tout droit "
                           "par la porte nord mais il s'agira alors d'une fuite", "90");
     fuite->AjouterRetireurACarac(LDOELH::ENDURANCE, 2);
     AjouterChoixGoToEffet("soit chercher dans votre sac à dos une arme que vous pourriez utiliser "
@@ -330,7 +330,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
 
 
     //26
-    Effet* effet26 = AjouterEffetNarration(
+    shared_ptr<Effet> effet26 = AjouterEffetNarration(
                 "Vous vous rappelez le petit livre à la reliure de cuir de Di Maggio, et "
                 "vous prononcez silencieusement, du bout des lèvres, la formule "
                 "magique enfermée dans ses pages. \n\n"
@@ -351,7 +351,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
     effet26->m_GoToEffetId = "371";
 
     //27
-    Effet* effet27 = AjouterEffetNarration(
+    shared_ptr<Effet> effet27 = AjouterEffetNarration(
                 "L'épée est une épée magique, et elle vous aidera à combattre. Aussi "
                 "longtemps que vous vous servirez de cette épée, vous pourrez "
                 "augmenter de 2 points votre total de départ en matière d'HABILETÉ. "
@@ -361,13 +361,13 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
            "", "27");
     effet27->AjouterAjouteurACarac(LDOELH::CHANCE, 2);
     //Choix* changerEpee = AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "319");
-    Choix* changerEpee = AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "1");
+    shared_ptr<Choix> changerEpee = AjouterChoixGoToEffet("Si vous jetez votre ancienne épée", "1");
     changerEpee->AjouterSetCaracTrue(Equipement::EPEE_MAGIQUE);
     changerEpee->AjouterChangeurDeCarac(Equipement::EPEE, "");
     AjouterChoixGoToEffet("Si vous préférez conserver votre propre épée", "319");
 
     //28
-    Effet* effet28 = AjouterEffetNarration(
+    shared_ptr<Effet> effet28 = AjouterEffetNarration(
                 "L'énorme Géant est étendu raide mort ! Vous fouillez sa caverne et n'y "
                 "trouvez pas grand-chose d'utile en dehors d'une bourse qu'il porte à sa "
                 "ceinture et qui » ontient 8 Pièces d'Or. Vous êtes un peu inquiet en ce "
@@ -380,7 +380,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
     effet28->m_GoToEffetId = "351";
 
     //29
-    Effet* effet29 = AjouterEffetNarration(
+    shared_ptr<Effet> effet29 = AjouterEffetNarration(
                 "A part les bottes auxquelles vous décidez de n'accorder aucune "
                 "attention, il y a peu de choses dans la caverne. Vous choisissez de "
                 "rebrousser chemin dans la direction d'où vous êtes venu.",
@@ -400,7 +400,7 @@ void GenSorcMontagneFeu::GenererNumeros21_30()
 void GenSorcMontagneFeu::GenererNumeros31_40()
 {
     //31
-    Effet* effet31 = AjouterEffetNarration(
+    shared_ptr<Effet> effet31 = AjouterEffetNarration(
                 "Si vous êtes en possession de la pierre précieuse arrachée à l'oeil du "
                 "Cyclope, vous la tenez devant le Sorcier. Son regard menaçant se "
                 "transforme alors en une expression de douleur. De toute évidence, il "
@@ -414,7 +414,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     effet31->m_GoToEffetId = "90";
 
     //32
-    Effet* effet32 = AjouterEffetNarration(
+    shared_ptr<Effet> effet32 = AjouterEffetNarration(
                 "Vous lancez le Fromage à travers la pièce en direction des Rats qui se "
                 "battent pour le dévorer, en échangeant des coups de pattes et de dents. "
                 "Ayant ainsi détourné leur attention, il ne vous reste plus qu'à traverser "
@@ -425,7 +425,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     effet32->m_GoToEffetId = "124";
 
     //33
-    Effet* effet33 = AjouterEffetNarration(
+    shared_ptr<Effet> effet33 = AjouterEffetNarration(
                 "La créature endormie se réveille en sursaut. Elle bondit et se rue sur "
                 "vous, sans arme. Vous devriez pouvoir la vaincre avec votre épée, mais "
                 "ses dents acérées semblent plutôt dangereuses."
@@ -440,7 +440,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
 
     // GESTION EQUIPEMENT !!! et attention à l'épée magique plus haut...
     // 34
-    Effet* effet34 = AjouterEffetNarration(
+    shared_ptr<Effet> effet34 = AjouterEffetNarration(
                 "En examinant les outils, vous trouvez un maillet en métal bien dur et "
                 "un ciseau muni d'une solide lame d'argent. Vous pouvez prendre l'un ou "
                 "l'autre de ces outils, à condition d'abandonner en échange l'une des "
@@ -451,7 +451,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     effet34->m_CallbackDisplay = [] {
         QList<QString> equiptHeros = Equipement::GetEquipementsHeros();
         QList<QString>::iterator it_eqpts = equiptHeros.begin();
-        Effet* effetActuel = Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet();
+        shared_ptr<Effet> effetActuel = Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet();
         for ( ;it_eqpts != equiptHeros.end();++it_eqpts )
         {
             QList<QString> nouvObjets = {Equipement::MAILLET_METAL, Equipement::CISEAU_LAME_ARGENT};
@@ -459,7 +459,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
             for ( ;it_nouv_eqt != nouvObjets.end();++it_nouv_eqt )
             {
                 QString texte = "Laisser " + *it_eqpts + " et prendre " + *it_nouv_eqt;
-                Choix* choix = new Choix(effetActuel, texte );
+                shared_ptr<Choix> choix = make_shared<Choix>(effetActuel, texte );
                 choix->AjouterSetCaracTrue(*it_nouv_eqt);
                 choix->AjouterChangeurDeCarac(*it_eqpts, "");
                 //choix->m_GoToEffetId = "96";
@@ -467,7 +467,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
             }
         }
         // possibilité de ne rien prendre :
-        Choix* choix = new Choix(effetActuel, "Ne rien prendre" );
+        shared_ptr<Choix> choix = make_shared<Choix>(effetActuel, "Ne rien prendre" );
         effetActuel->m_Choix.push_back(choix);
         //effetActuel->m_GoToEffetId = "96";
     };
@@ -513,12 +513,12 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
                 "fait mangeables. Si vous voulez, vous pouvez les prendre, ils vous "
                 "feront deux repas supplémentaires",
            "", "38");
-    Choix* choixRepas = AjouterChoixGoToEffet("Prendre les repas", "66");
+    shared_ptr<Choix> choixRepas = AjouterChoixGoToEffet("Prendre les repas", "66");
     choixRepas->AjouterAjouteurACarac(LDOELH::REPAS, 2);
     AjouterChoixGoToEffet("De retour dans la pièce, vous pouvez maintenant sortir par la porte sud.", "66");
 
     //39
-    Effet* effet39 = AjouterEffetNarration(
+    shared_ptr<Effet> effet39 = AjouterEffetNarration(
                 "Votre adversaire est surpris que vous ayez disparu et, levant les mains "
                 "pour les mettre en visière au-dessus de ses yeux, il scrute la pièce d'un "
                 "regard intense. Il sent votre présence, mais ne sait pas exactement où "
@@ -544,7 +544,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
     effet39->m_GoToEffetId = "396";
 
     //40
-    Effet* effet40 = AjouterEffetNarration(
+    shared_ptr<Effet> effet40 = AjouterEffetNarration(
                 "Le bruit perçant devient de plus en plus fort. La douleur est "
                 "insupportable. Réduisez votre total d'HABI LETÉ d'1 point à cause de "
                 "ce supplice. Vous avancez à tâtons dans le noir pour essayer de trouver "
@@ -559,7 +559,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
 void GenSorcMontagneFeu::GenererNumeros41_50()
 {
     //41
-    Effet* effet41 = AjouterEffetNarration(
+    shared_ptr<Effet> effet41 = AjouterEffetNarration(
                 "C'est un adversaire redoutable : c'est un ÊTRE ! Il est massif, puissant "
                 "et malfaisant. Le combat s'engage :",
                 "", "41");
@@ -586,7 +586,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     AjouterChoixGoToEffet("Pour le sud", "52");
 
     //44
-    Effet* effet44 = AjouterEffetNarration(
+    shared_ptr<Effet> effet44 = AjouterEffetNarration(
                 "Haletant après la bataille, vous vous asseyez pour récupérer et vous "
                 "finissez de manger les Provisions que vous aviez entamées. Finalement, "
                 "vous rangez vos affaires dans votre sac à dos et vous avancez dans le "
@@ -595,7 +595,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     effet44->m_GoToEffetId = "399";
 
     //45
-    Effet* effet45 = AjouterEffetNarration(
+    shared_ptr<Effet> effet45 = AjouterEffetNarration(
                 "Le Fromage heurte le portrait et rebondit. Vous entendez un rire sinistre "
                 "qui s'élève des murs et vous comprenez que le Sorcier est en train de se "
                 "moquer de vous. Vous décidez de quitter la pièce par la porte sud.",
@@ -612,7 +612,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     AjouterChoixGoToEffet("Si vous choisissez de passer la porte", "206");
 
     //47
-    /*Effet* effet47 = */AjouterEffetNarration(
+    /*shared_ptr<Effet> effet47 = */AjouterEffetNarration(
                 "Lorsque vous êtes au milieu de la rivière, le pont se met à se balancer "
                 "sous votre poids. La rambarde se dérobe brusquement au moment où "
                 "vous vous appuyez dessus. Lancez un dé. ",
@@ -645,7 +645,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     AjouterChoixGoToEffet("Pour aller à l'ouest", "60");
 
     //49
-    Effet* effet49 = AjouterEffetNarration(
+    shared_ptr<Effet> effet49 = AjouterEffetNarration(
                 "La porte grince en s'ouvrant sur ses gonds rouillés. La pièce est sombre "
                 "et vos yeux s'habituent à l'obscurité tandis que vous refermez la porte "
                 "derrière vous. Vous entendez un bruissement de pas, mais avant que "
@@ -656,7 +656,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
     effet49->m_GoToEffetId = "122";
 
     // 50
-    Effet* effet50 = AjouterEffetNarration(
+    shared_ptr<Effet> effet50 = AjouterEffetNarration(
                 "La créature que vous avez tuée s'écroule sur le sol. Vous fouillez ses "
                 "vêtements sans rien trouver, mais un petit sac pend à son cou. A "
                 "l'intérieur du sac se trouve une petite clé de bronze gravée du chiffre 9. "
@@ -664,7 +664,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
                 "d'intéressant dans la caverne, et vous sortez en retournant à la "
                 "bifurcation.",
                 "", "50");
-    Choix* choixCle = AjouterChoixGoToEffet("Prendre la clef", "269");
+    shared_ptr<Choix> choixCle = AjouterChoixGoToEffet("Prendre la clef", "269");
     choixCle->AjouterSetCaracTrue(Equipement::CLEF_BRONZE9);
     AjouterChoixGoToEffet("Ne pas prendre la clé", "269");
 }

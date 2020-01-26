@@ -34,7 +34,7 @@ private:
 
     // numéro spécial qui peut être appelé de plusieurs endroits différents et a un effet généré pour chacun de ces cas
     // c'est donc un numéro qui existe en plusieurs exemplaires
-    Effet* GenererNumeros161();
+    shared_ptr<Effet> GenererNumeros161();
     static int Num161_COUNTER;
     void GenererEffetsGeneriques();
 

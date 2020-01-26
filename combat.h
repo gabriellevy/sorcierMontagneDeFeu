@@ -2,7 +2,7 @@
 #define COMBAT_H
 
 #include "../destinLib/abs/lancerde.h"
-
+#include <memory>
 
 enum CapaciteCreature {
     SuceurHabilete, // retire un point d'habileté au joueur chaque fois qu'il le blesse 3 fois
@@ -65,8 +65,8 @@ public:
 
     static Combat* GetCombat();
 
-    LancerDe* AjouterCombat(Effet* effet, QVector<Creature*> creatures);
-    void AjouterCombatAvecFuite(Effet* effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite);
+    std::shared_ptr<LancerDe> AjouterCombat(std::shared_ptr<Effet> effet, QVector<Creature*> creatures);
+    void AjouterCombatAvecFuite(std::shared_ptr<Effet> effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite);
     Creature* GetEnnemiActuel();
 
     // caractéristiques "gameplay" nécessaires pour le système mais pas affichées

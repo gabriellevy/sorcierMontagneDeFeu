@@ -9,6 +9,8 @@
 #include "../destinLib/aleatoire.h"
 #include "heros.h"
 
+using std::shared_ptr;
+
 Combat::Combat()
 {
     ME = this;
@@ -31,12 +33,12 @@ ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
 }
 
 void Combat::AjouterCombatAvecFuite(
-        Effet* effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite)
+        shared_ptr<Effet> effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite)
 {
-    LancerDe* combat = AjouterCombat(effet, creatures);
+    shared_ptr<LancerDe> combat = AjouterCombat(effet, creatures);
     GenSorcMontagneFeu* genSorcMontagneFeu = GenSorcMontagneFeu::GetGenSorcMontagneFeu();
     // fuir implique qu'on perde 2 points d'endurance
-    Choix* choixFuite = genSorcMontagneFeu->m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
+    shared_ptr<Choix> choixFuite = genSorcMontagneFeu->m_GenerateurEvt->AjouterChoixGoToEffet(texteFuite, idFuite, "", combat);
     choixFuite->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
 }
 
@@ -202,7 +204,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
     return combatContinue;
 }
 
-LancerDe* Combat::AjouterCombat(Effet* effet, QVector<Creature*> creatures)
+shared_ptr<LancerDe> Combat::AjouterCombat(shared_ptr<Effet> effet, QVector<Creature*> creatures)
 {
     QString texteToutCombat = "";
     GenSorcMontagneFeu* genSorcMontagneFeu = GenSorcMontagneFeu::GetGenSorcMontagneFeu();

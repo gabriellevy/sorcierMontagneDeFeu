@@ -10,7 +10,7 @@
 void GenSorcMontagneFeu::GenererNumeros51_60()
 {
     // 51
-    Effet* effet51 = AjouterEffetNarration(
+    shared_ptr<Effet> effet51 = AjouterEffetNarration(
                 "Vous buvez la Potion et vous voyez alors une expression d'étonnement "
                 "naître sur le visage du Troll. Il s'avance vers vous, il essaie de vous "
                 "toucher, mais vous faites un pas de côté et il ne rencontre que le vide. Il "
