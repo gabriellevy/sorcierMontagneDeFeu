@@ -17,7 +17,7 @@ public:
     explicit LDOELH(ModeAffichage modeAffichage = ModeAffichage::ema_Jeu,
                     QWidget *parent = nullptr);
 
-    Combat* m_GestCombat = nullptr;
+    std::shared_ptr<Combat> m_GestCombat = nullptr;
 
     // noms d'aventures
     static QString SORCIER_MONTAGNE_FEU;

@@ -1,6 +1,8 @@
 #include "heros.h"
 #include "equipement.h"
 
+using std::shared_ptr;
+
 Heros::Heros():DPerso("Reynault", "Reynault", "Reynault", "")
 {}
 
@@ -23,5 +25,5 @@ int Heros::GetValeurCaracAsInt(QString id)
 
 Heros* Heros::GetHerosJoue()
 {
-    return static_cast<Heros*>(DPerso::GetDPersoJoue());
+    return static_cast<Heros*>(DPerso::GetDPersoJoue().get());
 }

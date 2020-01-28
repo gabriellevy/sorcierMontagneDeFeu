@@ -2,7 +2,6 @@
 #define COMBAT_H
 
 #include "../destinLib/abs/lancerde.h"
-#include <memory>
 
 enum CapaciteCreature {
     SuceurHabilete, // retire un point d'habileté au joueur chaque fois qu'il le blesse 3 fois
@@ -65,20 +64,22 @@ public:
 
     static Combat* GetCombat();
 
-    std::shared_ptr<LancerDe> AjouterCombat(std::shared_ptr<Effet> effet, QVector<Creature*> creatures);
-    void AjouterCombatAvecFuite(std::shared_ptr<Effet> effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite);
-    Creature* GetEnnemiActuel();
+    std::shared_ptr<LancerDe> AjouterCombat(
+            std::shared_ptr<Effet> effet, QVector<std::shared_ptr<Creature>> creatures);
+    void AjouterCombatAvecFuite(
+            std::shared_ptr<Effet> effet, QVector<std::shared_ptr<Creature>> creatures, QString texteFuite, QString idFuite);
+    std::shared_ptr<Creature> GetEnnemiActuel();
 
     // caractéristiques "gameplay" nécessaires pour le système mais pas affichées
     int m_NumDeCombat;// quand il y a plusieurs monstres à affronter l'un derrière l'autre (premier = 0)
     int m_ResAttaqueJoueur;
     int m_ResAttaqueEnnemi;
     PhaseCombat m_PhaseCombat = AucunCombatEnCours;
-    QVector<Creature*> m_Ennemis = {};
+    QVector<std::shared_ptr<Creature>> m_Ennemis = {};
     int m_NbBlessuresRecues;
 
     // fonctions "runtime" : ne peuvent être appelée que lors de l'exécution du combat, et donc qu'il y a au moins une créature vivante
-    void CommencerCombat(QVector<Creature*> creatures);
+    void CommencerCombat(QVector<std::shared_ptr<Creature>> creatures);
     void FinirCombat();
     bool TourDeCombat(int resDes, QString &resTxt);
     QString GetIntituleCombat(int indexCombat = -1);

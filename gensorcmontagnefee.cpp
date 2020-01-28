@@ -12,6 +12,9 @@
 #include "equipement.h"
 #include "heros.h"
 
+using std::shared_ptr;
+using std::make_shared;
+
 GenSorcMontagneFeu::GenSorcMontagneFeu():GenHistoire ("Le sorcier de la montagne de feu") {}
 
 GenSorcMontagneFeu* GenSorcMontagneFeu::GetGenSorcMontagneFeu()
@@ -24,7 +27,7 @@ void GenSorcMontagneFeu::GenererEffetsGeneriques()
     AjouterEffetNarration("Vous êtes mort", "", "mort");
 }
 
-Hist* GenSorcMontagneFeu::GenererHistoire()
+shared_ptr<Hist> GenSorcMontagneFeu::GenererHistoire()
 {
     GenererPersos();
 
@@ -48,7 +51,7 @@ Hist* GenSorcMontagneFeu::GenererHistoire()
 
 void GenSorcMontagneFeu::GenererPersos()
 {
-    DPerso* perso = new Heros();
+    shared_ptr<DPerso> perso = make_shared<Heros>();
     perso->InitialiserPerso();
     IPerso::AjouterPersoJouable(perso);
 }
@@ -87,7 +90,7 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
                    QString texteChanceux, QString effet_chanceux_id,
                    std::function<void()> malchanceuxCallback, std::function<void()> chanceuxCallback)
 {
-    std::function<ResExecutionLancerDe*(int)> tenter =
+    std::function<shared_ptr<ResExecutionLancerDe>(int)> tenter =
             [texteMalchanceux, effet_malchanceux_id, texteChanceux, effet_chanceux_id, malchanceuxCallback, chanceuxCallback](int i) {
         bool chanceux = TenterLaChance(i);
 
@@ -105,7 +108,7 @@ void GenSorcMontagneFeu::TenterLaChanceGoTo(QString texteMalchanceux, QString ef
             resTxt += texteMalchanceux;
             Univers::ME->GetExecHistoire()->EffetActuel()->m_GoToEffetId = effet_malchanceux_id;
         }
-        return new ResExecutionLancerDe(resTxt, false);
+        return make_shared<ResExecutionLancerDe>(resTxt, false);
     };
 
     // tenter la chance se fait toujours avec deux dés
@@ -162,7 +165,7 @@ shared_ptr<Effet> GenSorcMontagneFeu::GenererNumeros161()
     }
 
     Combat::GetCombat()->AjouterCombat(effet161, {
-                                           new Creature(nomCreature, habileteCreature, enduranceCreature, {Aveugle})});
+                         shared_ptr<Creature>(new Creature(nomCreature, habileteCreature, enduranceCreature, {Aveugle}))});
 
     return effet161;
 }

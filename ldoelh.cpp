@@ -3,6 +3,9 @@
 #include "gensorcmontagnefee.h"
 #include "combat.h"
 
+using std::shared_ptr;
+using std::make_shared;
+
 QString LDOELH::ENDURANCE = "Endurance";
 QString LDOELH::HABILETE = "Habileté";
 QString LDOELH::CHANCE = "Chance";
@@ -16,9 +19,9 @@ LDOELH::LDOELH(ModeAffichage modeAffichage,
 {
     this->AppliquerTheme(QColor(240, 214, 113));
 
-    m_GestCombat = new Combat();
+    m_GestCombat = make_shared<Combat>();
 
-    m_GensHistoire[LDOELH::SORCIER_MONTAGNE_FEU] = new GenSorcMontagneFeu();
+    m_GensHistoire[LDOELH::SORCIER_MONTAGNE_FEU] = make_shared<GenSorcMontagneFeu>();
 }
 
 void LDOELH::InitialiserCaracsBase()

@@ -33,7 +33,7 @@ ResExecutionLancerDe* ExecutionCombatDe(int resDe/*, QVector<QString> params*/)
 }
 
 void Combat::AjouterCombatAvecFuite(
-        shared_ptr<Effet> effet, QVector<Creature*> creatures, QString texteFuite, QString idFuite)
+        shared_ptr<Effet> effet, QVector<shared_ptr<Creature>> creatures, QString texteFuite, QString idFuite)
 {
     shared_ptr<LancerDe> combat = AjouterCombat(effet, creatures);
     GenSorcMontagneFeu* genSorcMontagneFeu = GenSorcMontagneFeu::GetGenSorcMontagneFeu();
@@ -44,11 +44,11 @@ void Combat::AjouterCombatAvecFuite(
 
 void Combat::AjouterFuiteAuCombat(QString texteFuite, QString idFuite)
 {
-    ExecChoix* execChoix = Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->AjoutChoixGoToEffet(texteFuite, idFuite);
+    shared_ptr<ExecChoix> execChoix = Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->AjoutChoixGoToEffet(texteFuite, idFuite);
     execChoix->m_Choix->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
 }
 
-void Combat::CommencerCombat(QVector<Creature*> creatures)
+void Combat::CommencerCombat(QVector<shared_ptr<Creature>> creatures)
 {
     m_Ennemis = creatures;
     m_NumDeCombat = 0;
@@ -68,7 +68,7 @@ void Combat::FinirCombat()
     m_NbBlessuresRecues = 0;
 }
 
-Creature* Combat::GetEnnemiActuel()
+shared_ptr<Creature> Combat::GetEnnemiActuel()
 {
     return m_Ennemis[m_NumDeCombat];
 }
@@ -80,7 +80,7 @@ QString Combat::GetIntituleCombat(int indexCreature)
     QString msg = "indexCreature trop grand pour ce combat : " + QString::number(indexCreature);
     Q_ASSERT_X(indexCreature < m_Ennemis.length(), msg.toStdString().c_str(), "Combat::GetIntituleCombat");
 
-    Creature* creature = m_Ennemis[indexCreature];
+    shared_ptr<Creature> creature = m_Ennemis[indexCreature];
     QString intitutle = creature->m_Nom + " - HABILITÉ : " +
             QString::number(creature->m_Habilete) +
             " ENDURANCE : " + QString::number(creature->m_Endurance);
@@ -97,7 +97,7 @@ void Combat::AjouterCaracAMonstre(CapaciteCreature capaciteCreature)
 bool Combat::TourDeCombat(int resDes, QString &resTxt)
 {
     bool combatContinue = true;
-    Creature* creature = GetEnnemiActuel();
+    shared_ptr<Creature> creature = GetEnnemiActuel();
     Heros* heros = Heros::GetHerosJoue();
 
     if ( m_PhaseCombat == PhaseCombat::AttaqueJoueur) {
@@ -204,7 +204,7 @@ bool Combat::TourDeCombat(int resDes, QString &resTxt)
     return combatContinue;
 }
 
-shared_ptr<LancerDe> Combat::AjouterCombat(shared_ptr<Effet> effet, QVector<Creature*> creatures)
+shared_ptr<LancerDe> Combat::AjouterCombat(shared_ptr<Effet> effet, QVector<shared_ptr<Creature>> creatures)
 {
     QString texteToutCombat = "";
     GenSorcMontagneFeu* genSorcMontagneFeu = GenSorcMontagneFeu::GetGenSorcMontagneFeu();
@@ -216,7 +216,7 @@ shared_ptr<LancerDe> Combat::AjouterCombat(shared_ptr<Effet> effet, QVector<Crea
 
     effet->m_Texte += "\n\n" + texteToutCombat;
 
-    std::function<ResExecutionLancerDe*(int)> lancerHabilite = [creatures](int resDes) {
+    std::function<shared_ptr<ResExecutionLancerDe>(int)> lancerHabilite = [creatures](int resDes) {
         Combat* combatActuel = Combat::GetCombat();
         if ( combatActuel->m_PhaseCombat == AucunCombatEnCours)
             combatActuel->CommencerCombat(creatures);
@@ -224,7 +224,7 @@ shared_ptr<LancerDe> Combat::AjouterCombat(shared_ptr<Effet> effet, QVector<Crea
         QString resTxt = "";
         bool combatContinue = combatActuel->TourDeCombat(resDes, resTxt);
 
-        return new ResExecutionLancerDe(resTxt, combatContinue);
+        return make_shared<ResExecutionLancerDe>(resTxt, combatContinue);
     };
 
     return genSorcMontagneFeu->m_GenerateurEvt->AjouterLancerDe("Combattre", 2, lancerHabilite);

@@ -7,6 +7,9 @@
 #include "../destinLib/abs/lancerde.h"
 #include "heros.h"
 
+using std::shared_ptr;
+using std::make_shared;
+
 void GenSorcMontagneFeu::GenererNumeros1_10()
 {
     //1
@@ -91,7 +94,7 @@ void GenSorcMontagneFeu::GenererNumeros1_10()
                 "vous entendez un grand cri derrière vous et vous Vous retournez aussitôt : "
                 "un homme aux allures de sauvage bondit sur vous en brandissant une hache d'armes. C'est un BARBARE fou, et il vous faut le combattre. ",
                 "", "8");
-    Combat::GetCombat()->AjouterCombatAvecFuite(effet8, {new Creature("BARBARE", 7, 6)},
+    Combat::GetCombat()->AjouterCombatAvecFuite(effet8, {make_shared<Creature>("BARBARE", 7, 6)},
                            "Il y a une porte dans le mur d'en face, situé au nord. Vous pouvez vous enfuir par là pendant le combat",
                            "189");
     effet8->m_GoToEffetId = "273";
@@ -186,7 +189,7 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "Vous tirez votre épée du fourreau; l'Ogre vous a entendu et se prépare à "
                 "l'attaque",
            "", "16");
-    Combat::GetCombat()->AjouterCombatAvecFuite(effet16, {new Creature("OGRE", 8, 10)},
+    Combat::GetCombat()->AjouterCombatAvecFuite(effet16, {make_shared<Creature>("OGRE", 8, 10)},
                            "Après le deuxième assaut, vous pouvez fuir le long du corridor.", "269");
     effet16->m_GoToEffetId = "50";
 
@@ -240,7 +243,9 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "Ces deux créatures malfaisantes sont des LUTINS. Ils vous attaquent "
                 "un par un.",
                 "", "19");
-    Combat::GetCombat()->AjouterCombat(effet19, {new Creature( "Premier LUTIN", 5, 5), new Creature("Deuxième LUTIN", 5, 6)});
+    Combat::GetCombat()->AjouterCombat(effet19, {
+                                           make_shared<Creature>( "Premier LUTIN", 5, 5),
+                                           make_shared<Creature>("Deuxième LUTIN", 5, 6)});
     effet19->m_GoToEffetId = "317";
 
     //19
@@ -250,10 +255,10 @@ void GenSorcMontagneFeu::GenererNumeros11_20()
                 "", "20");
     Combat::GetCombat()->AjouterCombatAvecFuite(
         effet20, {
-        new Creature( "Premier NAIN", 7, 6),
-        new Creature("Deuxième NAIN", 7, 7),
-        new Creature("Troisième NAIN", 4, 6),
-        new Creature("Quatrième NAIN", 5, 5)
+        make_shared<Creature>( "Premier NAIN", 7, 6),
+        make_shared<Creature>("Deuxième NAIN", 7, 7),
+        make_shared<Creature>("Troisième NAIN", 4, 6),
+        make_shared<Creature>("Quatrième NAIN", 5, 5)
         },
         "Si le combat tourne mal, vous pouvez fuir par la porte.- mais n'oubliez pas votre pénalité de fuite.",
         "371");
@@ -434,7 +439,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
            "", "33");
     Combat::GetCombat()->AjouterCombatAvecFuite(
                 effet33,
-                {new Creature("FARFADET", 6, 4)},
+                {make_shared<Creature>("FARFADET", 6, 4)},
                 "Vous avez le droit de prendre fuite par la porte", "320");
     effet33->m_GoToEffetId = "147";
 
@@ -540,7 +545,9 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
            "", "39");
     Combat::GetCombat()->AjouterCombat(
                 effet39,
-                {new Creature("SORCIER", 11, 18, {Aveugle})} );
+                {
+                    shared_ptr<Creature>(new Creature("SORCIER", 11, 18, {Aveugle}))
+                } );
     effet39->m_GoToEffetId = "396";
 
     //40
@@ -565,7 +572,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
                 "", "41");
     Combat::GetCombat()->AjouterCombat(
         effet41, {
-                    new Creature( "L'ÊTRE", 9, 6, {GoToAuPremierSang})
+                    shared_ptr<Creature>( new Creature("L'ÊTRE", 9, 6, {GoToAuPremierSang}))
         });
     effet41->m_GoToEffetId = "376";
 
@@ -632,7 +639,7 @@ void GenSorcMontagneFeu::GenererNumeros41_50()
             Univers::ME->GetExecHistoire()->GetExecEffetActuel()->GetEffet()->m_GoToEffetId = "298";
         }
 
-        return new ResExecutionLancerDe(resTxt, false);
+        return make_shared<ResExecutionLancerDe>(resTxt, false);
 
     });
 

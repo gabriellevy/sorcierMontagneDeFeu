@@ -13,7 +13,7 @@ class GenSorcMontagneFeu : public GenHistoire
 public:
     GenSorcMontagneFeu();
 
-    virtual Hist* GenererHistoire();
+    virtual std::shared_ptr<Hist> GenererHistoire();
 
     static GenSorcMontagneFeu* GetGenSorcMontagneFeu();
 

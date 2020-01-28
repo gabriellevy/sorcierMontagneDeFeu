@@ -3,6 +3,9 @@
 #include "../destinLib/abs/carac.h"
 #include "heros.h"
 
+using std::shared_ptr;
+using std::make_shared;
+
 Equipement::Equipement(QString id):m_Id(id)
 {
 
@@ -38,7 +41,7 @@ void Equipement::GetEquipementDepart()
     for (i = Equipement::EQUIPEMENTS.begin(); i != Equipement::EQUIPEMENTS.end(); ++i) {
 
         GestionnaireCarac::GetGestionnaireCarac()->AjouterCarac(
-                    new Carac(
+                    make_shared<Carac>(
                         i.key(),
                         i.key(),
                         "",
