@@ -44,7 +44,7 @@ void Combat::AjouterCombatAvecFuite(
 
 void Combat::AjouterFuiteAuCombat(QString texteFuite, QString idFuite)
 {
-    shared_ptr<ExecChoix> execChoix = Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->AjoutChoixGoToEffet(texteFuite, idFuite);
+    ExecChoix* execChoix = Univers::ME->GetExecHistoire()->GetExecLancerDeActuel()->AjoutChoixGoToEffet(texteFuite, idFuite);
     execChoix->m_Choix->AjouterRetireurACarac(LDOELH::ENDURANCE, "2");
 }
 

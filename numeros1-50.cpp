@@ -464,7 +464,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
             for ( ;it_nouv_eqt != nouvObjets.end();++it_nouv_eqt )
             {
                 QString texte = "Laisser " + *it_eqpts + " et prendre " + *it_nouv_eqt;
-                shared_ptr<Choix> choix = make_shared<Choix>(effetActuel, texte );
+                shared_ptr<Choix> choix = make_shared<Choix>(texte );
                 choix->AjouterSetCaracTrue(*it_nouv_eqt);
                 choix->AjouterChangeurDeCarac(*it_eqpts, "");
                 //choix->m_GoToEffetId = "96";
@@ -472,7 +472,7 @@ void GenSorcMontagneFeu::GenererNumeros31_40()
             }
         }
         // possibilité de ne rien prendre :
-        shared_ptr<Choix> choix = make_shared<Choix>(effetActuel, "Ne rien prendre" );
+        shared_ptr<Choix> choix = make_shared<Choix>("Ne rien prendre" );
         effetActuel->m_Choix.push_back(choix);
         //effetActuel->m_GoToEffetId = "96";
     };
