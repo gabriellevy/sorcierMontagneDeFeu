@@ -1,5 +1,5 @@
 #include "gensorcmontagnefee.h"
-#include "../destinLib/gestionnairecarac.h"
+#include "../destinLib/gestcarac.h"
 #include "ldoelh.h"
 #include "../destinLib/aleatoire.h"
 #include "../destinLib/abs/perso.h"
@@ -60,15 +60,15 @@ void GenSorcMontagneFeu::GenererCaracs()
 {
     // note : ce serait mieux de pouvoir tirer au dé pour déterminer ces valeurs
     int habilete = 6 + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE, habilete, 0, habilete);
+    GestCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::HABILETE, habilete, 0, habilete);
 
     int endurance = 12 + Aleatoire::GetAl()->D6() + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::ENDURANCE, endurance, 0, endurance);
+    GestCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::ENDURANCE, endurance, 0, endurance);
 
     int chance = 6 + Aleatoire::GetAl()->D6();
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE, chance, 0, chance);
+    GestCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::CHANCE, chance, 0, chance);
 
-    GestionnaireCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::REPAS, 10, 0, 10);
+    GestCarac::GetGestionnaireCarac()->AjouterCaracNombre(LDOELH::REPAS, 10, 0, 10);
 
     Equipement::GetEquipementDepart();
 }

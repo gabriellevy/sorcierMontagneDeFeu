@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QList>
+#include <memory>
 
 /**
  * @brief classe de gestion de toutes les caracs qui sont aussi de l'équipement

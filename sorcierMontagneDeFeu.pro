@@ -30,7 +30,7 @@ include(../destinLib/gen/gen.pri)
 include(../destinLib/exec/exec.pri)
 
 SOURCES += \
-    ../destinLib/gestionnairecarac.cpp \
+    ../destinLib/gestcarac.cpp \
     ../destinLib/aspectratiolabel.cpp \
     ../destinLib/dbmanager.cpp \
     ../destinLib/glisseur.cpp \
@@ -46,7 +46,7 @@ SOURCES += \
     numeros51-100.cpp
 
 HEADERS += \
-    ../destinLib/gestionnairecarac.h \
+    ../destinLib/gestcarac.h \
     ../destinLib/aspectratiolabel.h \
     ../destinLib/dbmanager.h \
     ../destinLib/glisseur.h \

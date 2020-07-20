@@ -1,5 +1,5 @@
 #include "equipement.h"
-#include "../destinLib/gestionnairecarac.h"
+#include "../destinLib/gestcarac.h"
 #include "../destinLib/abs/carac.h"
 #include "heros.h"
 
@@ -40,8 +40,8 @@ void Equipement::GetEquipementDepart()
     QMap<QString, QString>::iterator i;
     for (i = Equipement::EQUIPEMENTS.begin(); i != Equipement::EQUIPEMENTS.end(); ++i) {
 
-        GestionnaireCarac::GetGestionnaireCarac()->AjouterCarac(
-                    make_shared<Carac>(
+        GestCarac::GetGestionnaireCarac()->AjouterCarac(
+                    new Carac(
                         i.key(),
                         i.key(),
                         "",

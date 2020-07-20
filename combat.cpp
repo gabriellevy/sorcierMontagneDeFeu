@@ -1,5 +1,5 @@
 #include "combat.h"
-#include "../destinLib/gestionnairecarac.h"
+#include "../destinLib/gestcarac.h"
 #include "gensorcmontagnefee.h"
 #include "ldoelh.h"
 #include "../destinLib/abs/choix.h"

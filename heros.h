@@ -1,6 +1,6 @@
 #ifndef HEROS_H
 #define HEROS_H
-#include "../destinLib/gestionnairecarac.h"
+#include "../destinLib/gestcarac.h"
 
 class Heros : public DPerso
 {

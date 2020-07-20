@@ -2,7 +2,7 @@
 #include "ldoelh.h"
 #include "combat.h"
 #include "equipement.h"
-#include "../destinLib/gestionnairecarac.h"
+#include "../destinLib/gestcarac.h"
 #include "../destinLib/exec/execeffet.h"
 #include "../destinLib/abs/lancerde.h"
 #include "heros.h"
